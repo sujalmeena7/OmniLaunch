@@ -1,0 +1,347 @@
+/* ============================================================
+   OmniLaunch — Global Design System
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@import "tailwindcss";
+
+/* ── CSS Variables (Design Tokens) ───────────────────────────── */
+:root {
+  /* Brand palette */
+  --brand-50: #f0f4ff;
+  --brand-100: #dbe4ff;
+  --brand-200: #bac8ff;
+  --brand-300: #91a7ff;
+  --brand-400: #748ffc;
+  --brand-500: #5c7cfa;
+  --brand-600: #4c6ef5;
+  --brand-700: #4263eb;
+  --brand-800: #3b5bdb;
+  --brand-900: #364fc7;
+
+  /* Accent (success/validation) */
+  --accent-green: #40c057;
+  --accent-red: #fa5252;
+  --accent-amber: #fab005;
+  --accent-cyan: #22b8cf;
+
+  /* Surfaces — Premium Lite Navy / Whitish */
+  --bg-primary: #f8faff;
+  --bg-secondary: #eef2ff;
+  --bg-tertiary: #e0e7ff;
+  --bg-elevated: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.7);
+
+  /* Glass surfaces for sidebar and header */
+  --bg-sidebar-glass: rgba(255, 255, 255, 0.4);
+  --bg-header-glass: rgba(255, 255, 255, 0.2);
+
+  /* Card glass surfaces */
+  --bg-card-glass: rgba(255, 255, 255, 0.7);
+  --bg-card-glass-hover: rgba(255, 255, 255, 0.9);
+  --border-card: rgba(255, 255, 255, 0.8);
+
+  /* Interactive surface tints */
+  --bg-input-tint: rgba(0, 0, 0, 0.03);
+  --bg-input-tint-hover: rgba(0, 0, 0, 0.05);
+  --bg-badge-tint: rgba(0, 0, 0, 0.04);
+
+  /* Accent button */
+  --accent-button-bg: linear-gradient(135deg, #C0FF33 0%, #D4F542 100%);
+  --accent-button-text: #0f1a4a;
+  --accent-button-shadow: 0 8px 24px -4px rgba(192, 255, 51, 0.3);
+  --accent-button-shadow-hover: 0 12px 32px -4px rgba(192, 255, 51, 0.4);
+  --accent-icon-shadow: 0 8px 16px -4px rgba(192, 255, 51, 0.4);
+
+  /* Avatar */
+  --bg-avatar: linear-gradient(135deg, #7F77DD, #5c7cfa);
+  --text-avatar: #ffffff;
+
+  /* Nav active background */
+  --bg-nav-active: rgba(163, 230, 53, 0.1);
+
+  /* Profile border */
+  --border-profile: rgba(255, 255, 255, 0.04);
+
+  /* Notification dot */
+  --color-notification: #ff4d4d;
+  --shadow-notification: 0 0 8px #ff4d4d;
+
+  /* Typefully Design System Tokens — Updated for Lite Theme */
+  --bg-app: #f8faff;
+  --bg-sidebar: #ffffff;
+  --bg-surface: rgba(255, 255, 255, 0.6);
+  --bg-surface-hover: rgba(255, 255, 255, 0.9);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-strong: rgba(0, 0, 0, 0.08);
+  --text-primary: #475569;
+  --text-secondary: #0f172a;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+  --accent-teal: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-lime: #a3e635;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+
+  /* Spacing scale */
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 6px;
+  --space-4: 8px;
+  --space-5: 14px;
+  --space-6: 16px;
+  --space-7: 20px;
+
+  /* Motion */
+  --motion-instant: 800ms;
+
+  /* Borders */
+  --border-active: var(--brand-500);
+
+  /* Gradients */
+  --gradient-brand: linear-gradient(135deg, #5c7cfa 0%, #845ef7 50%, #e64980 100%);
+  --gradient-surface: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  --gradient-glow: radial-gradient(ellipse at 50% 0%, rgba(92, 124, 250, 0.15) 0%, transparent 60%);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(92, 124, 250, 0.3);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ── Base Reset ──────────────────────────────────────────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 148, 167, 0.25);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 148, 167, 0.45);
+}
+
+/* ── Selection ───────────────────────────────────────────────── */
+::selection {
+  background: var(--brand-600);
+  color: white;
+}
+
+/* ── Focus ring ──────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent-lime);
+  outline-offset: 2px;
+}
+
+.premium-input:focus {
+  border-color: rgba(192, 255, 51, 0.4) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 0 20px rgba(192, 255, 51, 0.1);
+}
+
+.premium-input:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Utility animations ──────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(92, 124, 250, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(92, 124, 250, 0.6); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+/* ── Landing Page Background ───────────────────────────────────
+   Deep navy base with radial glow behind mockup, mesh gradients,
+   glassmorphism light streaks, and sharp white cutoff at bottom.
+   ───────────────────────────────────────────────────────────── */
+.landing-page-bg {
+  background-color: #060b2e;
+  background-image:
+    radial-gradient(ellipse 1000px 800px at 72% 42%, rgba(65, 105, 225, 0.75) 0%, rgba(70, 85, 235, 0.45) 20%, rgba(90, 70, 220, 0.20) 45%, transparent 72%),
+    radial-gradient(ellipse 600px 480px at 24% 28%, rgba(100, 149, 237, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 450px 360px at 88% 18%, rgba(138, 43, 226, 0.11) 0%, transparent 50%),
+    linear-gradient(90deg, transparent 6%, rgba(255,255,255,0.03) 10%, rgba(255,255,255,0.07) 14%, rgba(255,255,255,0.03) 18%, transparent 22%),
+    linear-gradient(90deg, transparent 36%, rgba(255,255,255,0.02) 41%, rgba(255,255,255,0.05) 46%, rgba(255,255,255,0.02) 51%, transparent 56%),
+    linear-gradient(90deg, transparent 70%, rgba(255,255,255,0.025) 75%, rgba(255,255,255,0.055) 80%, rgba(255,255,255,0.025) 85%, transparent 90%),
+    linear-gradient(to bottom, #060b2e 0%, #060b2e 14%, #0a1840 20%, #122462 26%, #1e3688 32%, #2e52b0 38%, #4a72d8 44%, #6a92e8 52%, #8fb0f2 62%, #b8c8e8 74%, #d0daf0 84%, #e6eaf6 92%, #060b2e 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.dashboard-landing-bg {
+  background-color: #f8faff;
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+    linear-gradient(to bottom, #dbeafe 0%, #f8faff 100%);
+  background-attachment: fixed;
+}
+
+/* ── Dark Theme Overrides ────────────────────────────────────── */
+[data-theme="dark"] {
+  /* Surfaces — luminance below 20% */
+  --bg-app: #0f172a;
+  --bg-sidebar: #1e293b;
+  --bg-surface: #1e293b;
+  --bg-surface-hover: #334155;
+  --bg-elevated: #1e293b;
+
+  /* Text — 4.5:1 contrast against --bg-surface (#1e293b) */
+  --text-primary: #f1f5f9;
+  --text-secondary: #e2e8f0;
+  /* Text muted — 3:1 contrast against --bg-surface (#1e293b) */
+  --text-muted: #94a3b8;
+  --text-inverse: #0f172a;
+
+  /* Borders — 1.5:1 contrast against --bg-surface (#1e293b) */
+  --border-subtle: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.24);
+
+  /* Shadows — rgba alpha >= 0.4 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+
+  /* Additional surface tokens */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-glass: rgba(15, 23, 42, 0.7);
+
+  /* Glass surfaces — dark semi-transparent (opacity 0.3-0.6 on dark base) */
+  --bg-sidebar-glass: rgba(15, 23, 42, 0.5);
+  --bg-header-glass: rgba(15, 23, 42, 0.4);
+
+  /* Card glass surfaces — dark */
+  --bg-card-glass: rgba(30, 41, 59, 0.7);
+  --bg-card-glass-hover: rgba(30, 41, 59, 0.9);
+  --border-card: rgba(255, 255, 255, 0.1);
+
+  /* Interactive surface tints */
+  --bg-input-tint: rgba(255, 255, 255, 0.05);
+  --bg-input-tint-hover: rgba(255, 255, 255, 0.08);
+  --bg-badge-tint: rgba(255, 255, 255, 0.08);
+
+  /* Accent button */
+  --accent-button-bg: linear-gradient(135deg, #C0FF33 0%, #D4F542 100%);
+  --accent-button-text: #0f1a4a;
+  --accent-button-shadow: 0 8px 24px -4px rgba(192, 255, 51, 0.2);
+  --accent-button-shadow-hover: 0 12px 32px -4px rgba(192, 255, 51, 0.3);
+  --accent-icon-shadow: 0 8px 16px -4px rgba(192, 255, 51, 0.3);
+
+  /* Avatar */
+  --bg-avatar: linear-gradient(135deg, #7F77DD, #5c7cfa);
+  --text-avatar: #ffffff;
+
+  /* Nav active background */
+  --bg-nav-active: rgba(163, 230, 53, 0.12);
+
+  /* Profile border */
+  --border-profile: rgba(255, 255, 255, 0.08);
+
+  /* Notification dot */
+  --color-notification: #ff4d4d;
+  --shadow-notification: 0 0 8px #ff4d4d;
+
+  /* Gradients */
+  --gradient-surface: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  --gradient-glow: radial-gradient(ellipse at 50% 0%, rgba(92, 124, 250, 0.2) 0%, transparent 60%);
+}
+
+/* Dashboard landing background — dark variant */
+[data-theme="dark"] .dashboard-landing-bg {
+  background-color: #0f172a;
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+    linear-gradient(to bottom, #1e293b 0%, #0f172a 100%);
+  background-attachment: fixed;
+}
+
+/* ── Theme Transition Animations ─────────────────────────────── */
+
+/* Body transitions for background-color and color (200ms ease-out) */
+body {
+  transition: background-color 200ms ease-out, color 200ms ease-out;
+}
+
+/* Surface and border transitions for elements using theme variables */
+.dashboard-landing-bg,
+[class*="bg-surface"],
+[class*="border-subtle"] {
+  transition: background-color 200ms ease-out, border-color 200ms ease-out;
+}
+
+/* No-transition guard — prevents initial load animation */
+.no-transition *,
+.no-transition *::before,
+.no-transition *::after {
+  transition: none !important;
+}
