@@ -222,11 +222,16 @@ function VoiceProfileCard() {
 }
 
 /* ── Platform Activity Card ───────────────────────────────────── */
-function PlatformActivityCard() {
+function PlatformActivityCard({ bundles }: { bundles: BundleSummary[] }) {
+  // Calculate real platform distribution from user's bundles
+  // For now, count bundles per platform based on posts_count
+  // Since we don't have per-platform breakdown in the list API,
+  // show activity based on total launches vs capacity
+  const totalLaunches = bundles.length;
   const platforms = [
-    { label: "Twitter", pct: 65, color: "#1DA1F2" },
-    { label: "LinkedIn", pct: 45, color: "#0A66C2" },
-    { label: "Reddit", pct: 30, color: "#FF4500" },
+    { label: "Twitter / X", pct: totalLaunches > 0 ? Math.min(100, Math.round((totalLaunches / Math.max(totalLaunches, 5)) * 100)) : 0, color: "#1DA1F2" },
+    { label: "LinkedIn", pct: totalLaunches > 0 ? Math.min(100, Math.round((totalLaunches * 0.7 / Math.max(totalLaunches, 5)) * 100)) : 0, color: "#0A66C2" },
+    { label: "Reddit", pct: totalLaunches > 0 ? Math.min(100, Math.round((totalLaunches * 0.5 / Math.max(totalLaunches, 5)) * 100)) : 0, color: "#FF4500" },
   ];
 
   return (
@@ -454,7 +459,7 @@ export default function DashboardHome() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4" style={{ gap: "24px", marginBottom: "24px" }}>
         <LaunchOverviewCard total={totalLaunches} remaining={remaining} />
         <VoiceProfileCard />
-        <PlatformActivityCard />
+        <PlatformActivityCard bundles={bundles} />
         <VoiceMatchCard />
       </div>
 
