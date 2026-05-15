@@ -129,6 +129,7 @@ export default function SubscriptionPage() {
       addToast({
         type: "error",
         message: error.message || "Failed to create subscription",
+        duration: 5000,
       });
       setIsLoading(null);
     }

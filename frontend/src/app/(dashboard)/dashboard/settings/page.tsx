@@ -199,7 +199,7 @@ export default function SettingsPage() {
             <div style={{ padding: "40px", background: "rgba(250, 82, 82, 0.05)", borderRadius: "32px", border: "1px solid rgba(250, 82, 82, 0.5)" }}>
               <h3 style={{ fontSize: "24px", fontWeight: 900, color: "var(--text-secondary)", marginBottom: "16px" }}>Cancel Subscription?</h3>
               <p style={{ color: "var(--text-muted)", marginBottom: "40px", lineHeight: 1.6 }}>
-                Are you sure? Your benefits will continue until <span style={{ color: "var(--text-secondary)", fontWeight: 700 }}>{formattedPeriodEnd}</span>.
+                Are you sure? Your benefits will continue until <span style={{ color: "var(--text-secondary)", fontWeight: 700 }}>{subscription?.current_period_end ? new Date(subscription.current_period_end).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "the end of your billing period"}</span>.
               </p>
               <div style={{ display: "flex", gap: "16px" }}>
                 <button
