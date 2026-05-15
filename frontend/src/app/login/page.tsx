@@ -6,13 +6,14 @@ import { api } from "@/lib/api";
 import { useAppStore } from "@/stores/appStore";
 import type { UserProfile } from "@/types";
 import { motion } from "framer-motion";
-import { Mail, Lock, EyeOff, LogIn } from "lucide-react";
+import { Mail, Lock, EyeOff, Eye, LogIn } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const setUser = useAppStore((s) => s.setUser);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -133,7 +134,7 @@ export default function LoginPage() {
           <div style={{ position: "relative" }}>
             <Lock size={16} style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", color: "#8a93a1" }} />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
@@ -155,7 +156,11 @@ export default function LoginPage() {
               onFocus={(e) => { e.currentTarget.style.background = "#ffffff"; e.currentTarget.style.boxShadow = "0 0 0 2px rgba(0,0,0,0.05)"; }}
               onBlur={(e) => { e.currentTarget.style.background = "#f4f5f7"; e.currentTarget.style.boxShadow = "none"; }}
             />
-            <EyeOff size={16} style={{ position: "absolute", right: "16px", top: "50%", transform: "translateY(-50%)", color: "#8a93a1", cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.color="#111827"} onMouseLeave={(e) => e.currentTarget.style.color="#8a93a1"} />
+            {showPassword ? (
+              <Eye size={16} style={{ position: "absolute", right: "16px", top: "50%", transform: "translateY(-50%)", color: "#111827", cursor: "pointer", transition: "color 0.2s" }} onClick={() => setShowPassword(false)} />
+            ) : (
+              <EyeOff size={16} style={{ position: "absolute", right: "16px", top: "50%", transform: "translateY(-50%)", color: "#8a93a1", cursor: "pointer", transition: "color 0.2s" }} onClick={() => setShowPassword(true)} />
+            )}
           </div>
 
           <div style={{ textAlign: "right", marginTop: "2px" }}>
