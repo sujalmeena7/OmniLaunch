@@ -33,7 +33,10 @@ export default function SignupPage() {
   };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       style={{
         position: "relative",
         minHeight: "100vh",
@@ -308,6 +311,6 @@ export default function SignupPage() {
           </div>
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 }
