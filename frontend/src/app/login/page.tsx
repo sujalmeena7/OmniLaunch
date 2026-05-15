@@ -35,7 +35,7 @@ export default function LoginPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
       style={{
         position: "relative",
         minHeight: "100vh",
@@ -43,6 +43,7 @@ export default function LoginPage() {
         alignItems: "center",
         justifyContent: "center",
         padding: "24px",
+        backgroundColor: "#e8ecf4",
         backgroundImage: "url('https://images.unsplash.com/photo-1517685352821-92cf88aee5a5?q=80&w=2574&auto=format&fit=crop')",
         backgroundSize: "cover",
         backgroundPosition: "center bottom",
