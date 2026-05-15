@@ -26,7 +26,7 @@ interface UseBundleSSEResult {
 }
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+  process.env.NEXT_PUBLIC_API_URL || "/api/v1";
 
 /**
  * Hook that opens an EventSource connection to the bundle SSE endpoint
