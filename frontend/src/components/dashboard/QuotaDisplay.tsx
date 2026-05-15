@@ -73,89 +73,71 @@ export default function QuotaDisplay() {
   return (
     <div className="px-3 py-1.5">
       <div
-        className="rounded-xl p-3 transition-all duration-300"
+        className="rounded-xl p-3.5 transition-all duration-300"
         style={{
           background: "rgba(255, 255, 255, 0.03)",
           border: `1px solid ${isExhausted ? "rgba(239, 68, 68, 0.2)" : showWarning ? "rgba(245, 158, 11, 0.2)" : "rgba(255, 255, 255, 0.05)"}`,
-          minHeight: "92px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center"
         }}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-1.5">
-            <div 
-              style={{ 
-                width: "20px", 
-                height: "20px", 
-                borderRadius: "6px", 
-                background: isExhausted ? "rgba(239, 68, 68, 0.1)" : "rgba(163, 230, 53, 0.1)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
-              <Zap
-                size={12}
-                style={{
-                  color: isExhausted
-                    ? "#ef4444"
-                    : showWarning
-                      ? "#f59e0b"
-                      : "var(--accent-lime)",
-                }}
-              />
-            </div>
-            <span
+        {/* Plan name + Upgrade */}
+        <div className="flex items-center justify-between mb-2.5">
+          <span
+            style={{
+              fontSize: "11px",
+              fontWeight: 800,
+              color: "var(--text-secondary)",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+            }}
+          >
+            {plan.toUpperCase()} PLAN
+          </span>
+          {plan === "free" && (
+            <a
+              href="/dashboard/settings"
               style={{
-                fontSize: "10px",
+                fontSize: "11px",
                 fontWeight: 800,
-                color: "var(--text-secondary)",
+                color: "var(--accent-lime)",
+                textDecoration: "none",
                 textTransform: "uppercase",
-                letterSpacing: "0.05em",
+                letterSpacing: "0.04em",
               }}
             >
-              Quota
+              Upgrade
+            </a>
+          )}
+          {isInTrial && (
+            <span style={{ fontSize: "9px", color: "var(--accent-lime)", fontWeight: 800, textTransform: "uppercase", background: "rgba(163, 230, 53, 0.1)", padding: "2px 6px", borderRadius: "4px" }}>
+              Trial
             </span>
-          </div>
-          {showWarning && !isExhausted && (
-            <AlertTriangle size={12} style={{ color: "#f59e0b" }} className="animate-pulse" />
           )}
         </div>
 
-        {/* Quota numbers */}
-        <div className="flex items-baseline justify-between mb-2">
-          <div className="flex items-baseline gap-1">
-            <span
-              style={{
-                fontSize: "18px",
-                fontWeight: 800,
-                color: isExhausted
-                  ? "#ef4444"
-                  : "var(--text-secondary)",
-                letterSpacing: "-0.01em"
-              }}
-            >
-              {launchesRemaining}
-            </span>
-            <span style={{ fontSize: "11px", color: "var(--text-muted)", fontWeight: 500 }}>
-              left
-            </span>
-          </div>
-          <span style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: 600 }}>
+        {/* Launches count */}
+        <div className="mb-2.5">
+          <span
+            style={{
+              fontSize: "16px",
+              fontWeight: 800,
+              color: isExhausted ? "#ef4444" : "var(--text-secondary)",
+              letterSpacing: "-0.01em",
+            }}
+          >
             {launchesUsed} / {plan === "team" ? "∞" : launchesPerMonth}
+          </span>
+          <span style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: 500, marginLeft: "6px" }}>
+            Launches
           </span>
         </div>
 
         {/* Progress bar */}
         {plan !== "team" && (
           <div
-            className="w-full rounded-full overflow-hidden mb-2"
+            className="w-full rounded-full overflow-hidden"
             style={{
-              height: "4px",
-              background: "rgba(255, 255, 255, 0.05)",
+              height: "5px",
+              background: "rgba(255, 255, 255, 0.06)",
             }}
           >
             <div
@@ -167,39 +149,11 @@ export default function QuotaDisplay() {
                   : showWarning
                     ? "#f59e0b"
                     : "var(--accent-lime)",
+                boxShadow: isExhausted ? "none" : "0 0 6px rgba(163, 230, 53, 0.3)",
               }}
             />
           </div>
         )}
-
-        {/* Action / Meta */}
-        <div className="flex items-center justify-between">
-           {isExhausted ? (
-            <a
-              href="/dashboard/settings"
-              className="flex items-center gap-1 group"
-              style={{
-                fontSize: "11px",
-                fontWeight: 700,
-                color: "var(--accent-lime)",
-                textDecoration: "none",
-              }}
-            >
-              <ArrowUpRight size={10} />
-              Upgrade
-            </a>
-          ) : (
-            <span style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: 500 }}>
-              Resets in 12d
-            </span>
-          )}
-
-          {isInTrial && (
-            <span style={{ fontSize: "9px", color: "var(--accent-lime)", fontWeight: 800, textTransform: "uppercase", background: "rgba(163, 230, 53, 0.1)", padding: "1px 4px", borderRadius: "4px" }}>
-              Trial
-            </span>
-          )}
-        </div>
       </div>
     </div>
   );
