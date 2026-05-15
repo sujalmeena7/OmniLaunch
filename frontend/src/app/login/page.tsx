@@ -32,7 +32,6 @@ export default function LoginPage() {
   };
 
   return (
-  return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
