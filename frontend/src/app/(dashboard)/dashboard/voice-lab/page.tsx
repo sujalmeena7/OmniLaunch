@@ -6,6 +6,7 @@ import { useAppStore } from "@/stores/appStore";
 import type { VoiceProfile } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dna, Plus, Trash2, Sparkles, Activity, FileText, CheckCircle2, AlertCircle } from "lucide-react";
+import { VoiceLabSkeleton } from "@/components/ui/skeletons";
 
 export default function VoiceLabPage() {
   const { voiceProfiles, setVoiceProfiles, activeVoice, setActiveVoice } = useAppStore();
@@ -94,19 +95,19 @@ export default function VoiceLabPage() {
     width: "100%",
     padding: "12px 16px",
     borderRadius: "14px",
-    border: "1.5px solid #e2e8f0",
-    background: "#ffffff",
-    color: "#1e293b",
+    border: "1.5px solid var(--border-strong)",
+    background: "rgba(255, 255, 255, 0.4)",
+    color: "var(--text-secondary)",
     fontSize: "14px",
     fontFamily: "var(--font-sans)",
     outline: "none",
     transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.01)",
+    boxShadow: "var(--shadow-sm)",
   };
 
   const labelStyle: React.CSSProperties = {
     fontSize: "12px",
-    color: "#475569",
+    color: "var(--text-primary)",
     textTransform: "uppercase",
     letterSpacing: "0.08em",
     display: "block",
@@ -116,7 +117,11 @@ export default function VoiceLabPage() {
   };
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "40px 24px" }}>
+    <>
+    {loading ? (
+      <VoiceLabSkeleton />
+    ) : (
+    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 24px 24px 24px" }}>
       <div className="flex items-center" style={{ gap: "12px", marginBottom: "16px" }}>
         <div
           className="flex items-center justify-center"
@@ -138,7 +143,7 @@ export default function VoiceLabPage() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", marginTop: "40px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", marginTop: "8px" }}>
         {/* Left: Training Form */}
         <div>
           <form onSubmit={handleTrain} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -197,8 +202,8 @@ export default function VoiceLabPage() {
                     marginTop: "8px",
                     padding: "10px 16px",
                     borderRadius: "12px",
-                    border: "1px dashed rgba(255, 255, 255, 0.1)",
-                    background: "#ffffff",
+                    border: "1px dashed var(--border-strong)",
+                    background: "var(--bg-elevated)",
                     color: "var(--text-muted)",
                     fontSize: "13px",
                     fontWeight: 600,
@@ -209,7 +214,7 @@ export default function VoiceLabPage() {
                     justifyContent: "center",
                     gap: "8px",
                     transition: "all 0.2s ease",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
+                    boxShadow: "var(--shadow-sm)",
                   }}
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--text-secondary)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(0, 0, 0, 0.1)"; e.currentTarget.style.color = "var(--text-muted)"; }}
@@ -270,7 +275,7 @@ export default function VoiceLabPage() {
 
         {/* Right: Existing Profiles + Manifesto */}
         <div>
-          <h2 style={{ fontSize: "11px", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "20px", fontFamily: "var(--font-heading)" }}>Your Voice Profiles</h2>
+          <h2 style={{ fontSize: "11px", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: "-48px", marginBottom: "12px", fontFamily: "var(--font-heading)" }}>Your Voice Profiles</h2>
 
           {loading ? (
             <div className="flex flex-col gap-4">
@@ -309,14 +314,15 @@ export default function VoiceLabPage() {
                       style={{
                         padding: "24px",
                         borderRadius: "24px",
-                        background: isActive ? "#ffffff" : "rgba(255, 255, 255, 0.4)",
+                        background: isActive ? "var(--bg-card-glass)" : "var(--bg-surface)",
+                        backdropFilter: isActive ? "blur(12px)" : "none",
                         border: "1px solid",
-                        borderColor: isActive ? "rgba(163, 230, 53, 0.4)" : "#e2e8f0",
+                        borderColor: isActive ? "var(--accent-lime)" : "var(--border-subtle)",
                         cursor: "pointer",
                         transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
                         position: "relative",
                         overflow: "hidden",
-                        boxShadow: isActive ? "0 10px 30px -10px rgba(163, 230, 53, 0.1)" : "0 4px 12px rgba(0,0,0,0.02)",
+                        boxShadow: isActive ? "var(--shadow-lg)" : "var(--shadow-sm)",
                       }}
                     >
                       {isActive && (
@@ -336,7 +342,7 @@ export default function VoiceLabPage() {
                         <div>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <span style={{ fontSize: "16px", fontWeight: 700, color: "var(--text-secondary)" }}>{profile.name}</span>
-                            {isActive && <CheckCircle2 size={14} style={{ color: "var(--accent-lime)" }} />}
+                            {isActive && <CheckCircle2 size={14} style={{ color: "#4d7c0f" }} />}
                           </div>
                           <div style={{ fontSize: "12px", color: "var(--text-muted)", marginTop: "4px", fontWeight: 500 }}>
                             {profile.sample_count} samples · Analyzed {new Date(profile.created_at).toLocaleDateString()}
@@ -344,7 +350,7 @@ export default function VoiceLabPage() {
                         </div>
                           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                           <div style={{ textAlign: "right" }}>
-                            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--accent-lime)", textTransform: "uppercase" }}>Confidence</div>
+                            <div style={{ fontSize: "11px", fontWeight: 700, color: "#4d7c0f", textTransform: "uppercase" }}>Confidence</div>
                             <div style={{ fontSize: "14px", fontWeight: 800, color: "var(--text-secondary)" }}>{Math.round(profile.confidence * 100)}%</div>
                           </div>
                           <button
@@ -378,8 +384,8 @@ export default function VoiceLabPage() {
                           }}
                         >
                           <div className="flex items-center" style={{ gap: "8px", marginBottom: "16px" }}>
-                            <FileText size={14} style={{ color: "var(--accent-lime)" }} />
-                            <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tone Manifesto</span>
+                            <FileText size={14} style={{ color: "#4d7c0f" }} />
+                            <span style={{ fontSize: "12px", fontWeight: 700, color: "#4d7c0f", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tone Manifesto</span>
                           </div>
 
                           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
@@ -404,23 +410,44 @@ export default function VoiceLabPage() {
                           {profile.tone_manifesto.signature_phrases?.length > 0 && (
                             <div style={{ marginTop: "20px" }}>
                               <div style={{ fontSize: "10px", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 600, marginBottom: "8px" }}>Signature Markers</div>
-                              <div className="flex flex-wrap" style={{ gap: "6px" }}>
-                                {profile.tone_manifesto.signature_phrases.map((phrase, i) => (
-                                  <span
-                                    key={i}
-                                    style={{
-                                      padding: "4px 10px",
-                                      borderRadius: "8px",
-                                      background: "rgba(192, 255, 51, 0.05)",
-                                      border: "1px solid rgba(192, 255, 51, 0.1)",
-                                      color: "var(--accent-lime)",
-                                      fontSize: "12px",
-                                      fontWeight: 500,
-                                    }}
-                                  >
-                                    {phrase}
-                                  </span>
-                                ))}
+                              <div className="flex flex-wrap" style={{ gap: "8px" }}>
+                                  {profile.tone_manifesto.signature_phrases.map((phrase, i) => (
+                                    <div
+                                      key={i}
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "8px",
+                                        padding: "8px 14px",
+                                        borderRadius: "10px",
+                                        background: "var(--bg-elevated)",
+                                        border: "1px solid var(--border-subtle)",
+                                        borderLeft: "3px solid var(--accent-lime)",
+                                        boxShadow: "var(--shadow-sm)",
+                                        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = "translateX(2px)";
+                                        e.currentTarget.style.boxShadow = "var(--shadow-md)";
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = "translateX(0)";
+                                        e.currentTarget.style.boxShadow = "var(--shadow-sm)";
+                                      }}
+                                    >
+                                      <CheckCircle2 size={14} style={{ color: "var(--accent-lime)", flexShrink: 0 }} />
+                                      <span
+                                        style={{
+                                          fontSize: "13px",
+                                          color: "var(--text-primary)",
+                                          fontWeight: 600,
+                                          lineHeight: "1.2",
+                                        }}
+                                      >
+                                        {phrase}
+                                      </span>
+                                    </div>
+                                  ))}
                               </div>
                             </div>
                           )}
@@ -435,5 +462,7 @@ export default function VoiceLabPage() {
         </div>
       </div>
     </div>
+    )}
+    </>
   );
 }

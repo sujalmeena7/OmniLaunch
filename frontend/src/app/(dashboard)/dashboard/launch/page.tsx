@@ -11,6 +11,8 @@ import ValidationGutter from "@/components/launch/ValidationGutter";
 import EmptyState from "@/components/launch/EmptyState";
 import GeneratingState from "@/components/launch/GeneratingState";
 import type { GeneratedPost, VoiceProfile, PlatformRule } from "@/types";
+import { LaunchSkeleton } from "@/components/ui/skeletons";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function LaunchPage() {
   const {
@@ -20,6 +22,8 @@ export default function LaunchPage() {
     setPlatformRules,
     editedPosts,
     updatePost,
+    user,
+    decrementLaunchesRemaining,
   } = useAppStore();
 
   const [loading, setLoading] = useState(true);
@@ -29,6 +33,10 @@ export default function LaunchPage() {
   const [activeTab, setActiveTab] = useState(0);
   const [error, setError] = useState("");
   const [usePollingFallback, setUsePollingFallback] = useState(false);
+
+  // Mobile layout state
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const [mobileView, setMobileView] = useState<"input" | "preview">("input");
 
   // Get auth token for SSE connection
   const token = useMemo(() => api.getToken(), []);
@@ -193,6 +201,8 @@ export default function LaunchPage() {
         })) as { bundle_id: string; status: string };
 
         setBundleId(result.bundle_id);
+        // Decrement launches_remaining in the store (backend already decremented server-side)
+        decrementLaunchesRemaining();
         // SSE hook will automatically connect via the bundleId state change.
         // Polling is only used as fallback if SSE connection fails.
       } catch (err) {
@@ -200,7 +210,7 @@ export default function LaunchPage() {
         setGenerating(false);
       }
     },
-    []
+    [decrementLaunchesRemaining]
   );
 
   const handleEdit = useCallback(
@@ -221,23 +231,73 @@ export default function LaunchPage() {
     }).catch(() => {});
   }, [bundleId]);
 
+  // Quota state
+  const quotaExhausted = (user?.launches_remaining ?? 0) <= 0;
+
   if (loading) {
-    return (
-      <div className="flex items-center justify-center" style={{ height: "calc(100vh - 100px)" }}>
-        <span style={{ fontSize: "13px", color: "var(--text-muted)" }}>Loading workspace...</span>
-      </div>
-    );
+    return <LaunchSkeleton />;
   }
 
+  // Mobile tab switcher component
+  const MobileViewSwitcher = () => (
+    <div
+      className="flex md:hidden"
+      style={{
+        borderBottom: "1px solid var(--border-subtle)",
+        background: "var(--bg-elevated)",
+      }}
+    >
+      <button
+        onClick={() => setMobileView("input")}
+        style={{
+          flex: 1,
+          padding: "12px 0",
+          fontSize: "13px",
+          fontWeight: 600,
+          fontFamily: "var(--font-sans)",
+          color: mobileView === "input" ? "var(--text-secondary)" : "var(--text-muted)",
+          background: "none",
+          border: "none",
+          borderBottom: mobileView === "input" ? "2px solid var(--accent-teal)" : "2px solid transparent",
+          cursor: "pointer",
+          transition: "all 0.15s ease",
+        }}
+      >
+        Input
+      </button>
+      <button
+        onClick={() => setMobileView("preview")}
+        style={{
+          flex: 1,
+          padding: "12px 0",
+          fontSize: "13px",
+          fontWeight: 600,
+          fontFamily: "var(--font-sans)",
+          color: mobileView === "preview" ? "var(--text-secondary)" : "var(--text-muted)",
+          background: "none",
+          border: "none",
+          borderBottom: mobileView === "preview" ? "2px solid var(--accent-teal)" : "2px solid transparent",
+          cursor: "pointer",
+          transition: "all 0.15s ease",
+        }}
+      >
+        Preview
+      </button>
+    </div>
+  );
+
   return (
-    <div className="flex" style={{ height: "calc(100vh - 100px)" }}>
+    <div className="flex flex-col md:flex-row" style={{ height: "calc(100vh - 120px)", gap: "24px" }}>
+      {/* Mobile tab switcher — visible only on mobile */}
+      {isMobile && <MobileViewSwitcher />}
+
       {/* Left Panel — Product Form */}
       <div
-        className="flex-shrink-0"
+        className={`flex-shrink-0 ${isMobile && mobileView !== "input" ? "hidden" : ""}`}
         style={{
-          width: "380px",
-          background: "var(--bg-sidebar)",
-          borderRight: "1px solid var(--border-subtle)",
+          width: isMobile ? "100%" : "380px",
+          flex: isMobile ? "1 1 auto" : undefined,
+          overflow: isMobile ? "auto" : undefined,
         }}
       >
         <ProductForm
@@ -245,13 +305,20 @@ export default function LaunchPage() {
           isGenerating={generating}
           voiceProfiles={voiceProfiles}
           platforms={platformRules}
+          quotaExhausted={quotaExhausted}
         />
       </div>
 
       {/* Right Panel — Preview */}
       <div
-        className="flex flex-col flex-1"
-        style={{ background: "var(--bg-app)", overflow: "hidden" }}
+        className={`flex flex-col flex-1 ${isMobile && mobileView !== "preview" ? "hidden" : ""}`}
+        style={{ 
+          background: "var(--bg-elevated)", 
+          overflow: "hidden",
+          borderRadius: "24px",
+          border: "1px solid var(--border-subtle)",
+          boxShadow: "var(--shadow-md)"
+        }}
       >
         {error && !generating && displayPosts.length === 0 && (
           <div
@@ -273,7 +340,7 @@ export default function LaunchPage() {
               activeTab={activeTab}
               onTabChange={setActiveTab}
             />
-            <div className="flex-1 overflow-y-auto" style={{ padding: "24px" }}>
+            <div className="flex-1 overflow-y-auto" style={{ padding: isMobile ? "16px" : "24px" }}>
               {activePost && (
                 <>
                   <PostPreview
@@ -288,6 +355,7 @@ export default function LaunchPage() {
                     checks={activePost.rule_checks}
                     voiceMatchScore={activePost.voice_match_score}
                     aiIsmsRemoved={activePost.ai_isms_removed}
+                    collapsible={isMobile}
                   />
                 </>
               )}

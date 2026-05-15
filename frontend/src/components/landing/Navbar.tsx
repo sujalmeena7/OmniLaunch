@@ -35,57 +35,11 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Announcement bar */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: "40px",
-          zIndex: 101,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-          background: "rgba(6, 13, 26, 0.80)",
-          backdropFilter: "blur(12px)",
-          fontFamily: "var(--font-sans)",
-        }}
-      >
-        <div
-          className="flex items-center justify-between"
-          style={{ width: "100%", maxWidth: "1100px", padding: "0 24px" }}
-        >
-          <div className="hidden sm:flex items-center" style={{ gap: "8px", fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
-            <span>OmniLaunch AI Power, Last Chance | Now Live</span>
-            <button
-              suppressHydrationWarning
-              onClick={() => router.push("/signup")}
-              style={{ color: "var(--accent-lime)", fontSize: "13px", fontWeight: 500, background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "4px" }}
-            >
-              Save 50% <span style={{ fontSize: "11px" }}>→</span>
-            </button>
-          </div>
-          <div className="flex items-center" style={{ gap: "16px", marginLeft: "auto" }}>
-            <span className="hidden sm:inline" style={{ fontSize: "13px", color: "rgba(255,255,255,0.5)" }}>+1 (555) 019-2834</span>
-            <button
-              suppressHydrationWarning
-              className="flex items-center"
-              style={{ gap: "6px", fontSize: "13px", color: "rgba(255,255,255,0.7)", background: "none", border: "none", cursor: "pointer" }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              Chat with sales
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Main navbar */}
       <nav
         style={{
           position: "fixed",
-          top: "40px",
+          top: 0,
           left: 0,
           right: 0,
           height: "64px",
@@ -246,7 +200,7 @@ export default function Navbar() {
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
               zIndex: 99,
-              paddingTop: "104px",
+              paddingTop: "64px",
             }}
           >
             <div className="flex flex-col items-center" style={{ gap: "24px", padding: "40px 24px" }}>

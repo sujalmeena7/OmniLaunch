@@ -27,18 +27,18 @@
   --accent-cyan: #22b8cf;
 
   /* Surfaces — Premium Lite Navy / Whitish */
-  --bg-primary: #f8faff;
-  --bg-secondary: #eef2ff;
-  --bg-tertiary: #e0e7ff;
+  --bg-primary: #e0e7ff;
+  --bg-secondary: #c7d2fe;
+  --bg-tertiary: #a5b4fc;
   --bg-elevated: #ffffff;
   --bg-glass: rgba(255, 255, 255, 0.7);
 
   /* Glass surfaces for sidebar and header */
-  --bg-sidebar-glass: rgba(255, 255, 255, 0.4);
-  --bg-header-glass: rgba(255, 255, 255, 0.2);
+  --bg-sidebar-glass: rgba(255, 255, 255, 0.5);
+  --bg-header-glass: rgba(255, 255, 255, 0.5);
 
   /* Card glass surfaces */
-  --bg-card-glass: rgba(255, 255, 255, 0.7);
+  --bg-card-glass: rgba(255, 255, 255, 0.6);
   --bg-card-glass-hover: rgba(255, 255, 255, 0.9);
   --border-card: rgba(255, 255, 255, 0.8);
 
@@ -69,7 +69,7 @@
   --shadow-notification: 0 0 8px #ff4d4d;
 
   /* Typefully Design System Tokens — Updated for Lite Theme */
-  --bg-app: #f8faff;
+  --bg-app: #e0e7ff;
   --bg-sidebar: #ffffff;
   --bg-surface: rgba(255, 255, 255, 0.6);
   --bg-surface-hover: rgba(255, 255, 255, 0.9);
@@ -232,15 +232,16 @@ body {
     linear-gradient(to bottom, #060b2e 0%, #060b2e 14%, #0a1840 20%, #122462 26%, #1e3688 32%, #2e52b0 38%, #4a72d8 44%, #6a92e8 52%, #8fb0f2 62%, #b8c8e8 74%, #d0daf0 84%, #e6eaf6 92%, #060b2e 100%);
   background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: fixed;
 }
 
 .dashboard-landing-bg {
-  background-color: #f8faff;
+  background-color: #e0e7ff;
   background-image:
-    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-    linear-gradient(to bottom, #dbeafe 0%, #f8faff 100%);
+    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.4) 0, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.4) 0, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.3) 0, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(163, 230, 53, 0.2) 0, transparent 50%),
+    linear-gradient(180deg, #c7d2fe 0%, #e0e7ff 100%);
   background-attachment: fixed;
 }
 
@@ -275,9 +276,9 @@ body {
   --bg-tertiary: #334155;
   --bg-glass: rgba(15, 23, 42, 0.7);
 
-  /* Glass surfaces — dark semi-transparent (opacity 0.3-0.6 on dark base) */
-  --bg-sidebar-glass: rgba(15, 23, 42, 0.5);
-  --bg-header-glass: rgba(15, 23, 42, 0.4);
+  /* Glass surfaces — dark solid */
+  --bg-sidebar-glass: #0f172a;
+  --bg-header-glass: rgba(15, 23, 42, 0.9);
 
   /* Card glass surfaces — dark */
   --bg-card-glass: rgba(30, 41, 59, 0.7);
@@ -344,4 +345,13 @@ body {
 .no-transition *::before,
 .no-transition *::after {
   transition: none !important;
+}
+
+/* ── Scrollbar-hide utility ──────────────────────────────────── */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

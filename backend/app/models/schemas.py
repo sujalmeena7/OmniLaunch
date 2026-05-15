@@ -30,7 +30,10 @@ class UserProfile(BaseModel):
     display_name: str | None
     plan: str
     launches_remaining: int
+    launches_per_month: int = 3
     avatar_url: str | None = None
+    trial_ends_at: str | None = None
+    is_trial: bool = False
 
 
 # ── Voice Profiles ────────────────────────────────────────────

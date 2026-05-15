@@ -29,7 +29,7 @@ export default function LogoBar() {
             style={{
               fontSize: "14px",
               fontWeight: 500,
-              color: "#1a2d6e",
+              color: "rgba(255,255,255,0.6)",
               margin: "0 0 20px 0",
             }}
           >
@@ -51,7 +51,7 @@ export default function LogoBar() {
               style={{
                 fontSize: "14px",
                 fontWeight: 600,
-                color: "#3d5296",
+                color: "rgba(255,255,255,0.8)",
                 letterSpacing: "-0.01em",
               }}
             >

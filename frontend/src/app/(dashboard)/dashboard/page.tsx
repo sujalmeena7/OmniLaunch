@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import LaunchRow from "@/components/dashboard/LaunchRow";
 import EmptyLaunches from "@/components/dashboard/EmptyLaunches";
+import { DashboardSkeleton } from "@/components/ui/skeletons";
 
 interface BundleSummary {
   id: string;
@@ -296,70 +297,77 @@ function VoiceMatchCard() {
 /* ── Feature Highlight Card ─────────────────────────────────── */
 function FeatureHighlightCard() {
   return (
-    <Card style={{ position: "relative", overflow: "hidden", padding: 0 }}>
+    <Card style={{ position: "relative", overflow: "hidden", padding: 0, height: "100%" }}>
       <div
         style={{
           background: "linear-gradient(135deg, #0a1840 0%, #122462 100%)",
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-end",
           padding: "24px",
           position: "relative",
+          minHeight: "220px"
         }}
       >
-        {/* Abstract shape */}
-        <div
-          style={{
-            position: "absolute",
-            top: "-20px",
-            right: "-20px",
-            width: "100px",
-            height: "100px",
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(127,119,221,0.15), transparent 70%)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: "20px",
-            left: "24px",
-            right: "24px",
-            height: "80px",
-            borderRadius: "12px",
-            background: "linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
-            border: "1px solid rgba(255,255,255,0.06)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: "32px",
-            left: "36px",
-            right: "36px",
-            height: "60px",
-            borderRadius: "10px",
-            background: "linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
-            border: "1px solid rgba(255,255,255,0.08)",
-          }}
-        />
+        <div className="flex items-center justify-between" style={{ marginBottom: "20px", position: "relative", zIndex: 2 }}>
+          <span style={{ fontSize: "11px", fontWeight: 800, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Next-Gen Tooling</span>
+          <Rocket size={14} style={{ color: "var(--accent-lime)" }} />
+        </div>
 
-        <div style={{ position: "relative", zIndex: 1 }}>
+        <div className="flex-1 flex flex-col justify-center gap-4" style={{ position: "relative", zIndex: 2 }}>
+           <div className="flex flex-col gap-2">
+              <div style={{ height: "8px", width: "60%", background: "rgba(255,255,255,0.1)", borderRadius: "4px" }} />
+              <div style={{ height: "8px", width: "90%", background: "rgba(255,255,255,0.06)", borderRadius: "4px" }} />
+              <div style={{ height: "8px", width: "40%", background: "rgba(255,255,255,0.08)", borderRadius: "4px" }} />
+           </div>
+           
+           <div style={{ fontSize: "14px", color: "rgba(255,255,255,0.9)", fontWeight: 500, lineHeight: 1.4 }}>
+             Generate high-converting <span style={{ color: "var(--accent-lime)" }}>LinkedIn posts</span> using your cloned voice DNA.
+           </div>
+        </div>
+
+        <div style={{ position: "relative", zIndex: 2, marginTop: "auto" }}>
           <div
             style={{
               display: "inline-flex",
-              padding: "5px 12px",
-              borderRadius: "8px",
+              padding: "6px 14px",
+              borderRadius: "10px",
               background: "var(--accent-lime)",
               color: "#0f1a4a",
-              fontSize: "11px",
+              fontSize: "12px",
               fontWeight: 700,
+              boxShadow: "0 4px 12px rgba(163, 230, 53, 0.3)"
             }}
           >
             AI Writing Assistant
           </div>
         </div>
+
+        {/* Abstract Background Elements */}
+        <div
+          style={{
+            position: "absolute",
+            top: "20%",
+            right: "-10%",
+            width: "200px",
+            height: "200px",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(163, 230, 53, 0.05) 0%, transparent 70%)",
+            filter: "blur(40px)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: "-20px",
+            right: "-20px",
+            width: "120px",
+            height: "120px",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(92, 124, 250, 0.1) 0%, transparent 70%)",
+            filter: "blur(30px)",
+          }}
+        />
       </div>
     </Card>
   );
@@ -436,20 +444,28 @@ export default function DashboardHome() {
   const remaining = user?.launches_remaining ?? 0;
   const recentBundles = bundles.slice(0, 5);
 
+  if (loading) {
+    return <DashboardSkeleton />;
+  }
+
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="show" style={{ maxWidth: "1100px" }}>
-      {/* Stats Grid — 3 columns top row */}
-      <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "20px", marginBottom: "20px" }}>
+      {/* Stats Grid — responsive: 1 col mobile, 2 col tablet, 4 col desktop */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4" style={{ gap: "24px", marginBottom: "24px" }}>
         <LaunchOverviewCard total={totalLaunches} remaining={remaining} />
         <VoiceProfileCard />
         <PlatformActivityCard />
+        <VoiceMatchCard />
       </div>
 
-      {/* Stats Grid — 3 columns bottom row */}
-      <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: "20px", marginBottom: "32px" }}>
-        <VoiceMatchCard />
-        <FeatureHighlightCard />
-        <PlatformBreakdownCard />
+      {/* Secondary cards row — expanded to fill the grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4" style={{ gap: "24px", marginBottom: "32px" }}>
+        <div className="lg:col-span-2">
+          <FeatureHighlightCard />
+        </div>
+        <div className="lg:col-span-2">
+          <PlatformBreakdownCard />
+        </div>
       </div>
 
       {/* Recent Launches */}
@@ -487,9 +503,7 @@ export default function DashboardHome() {
             </button>
           </div>
 
-          {loading ? (
-            <div style={{ color: "var(--text-primary)", fontSize: "14px", padding: "16px 0" }}>Loading bundles...</div>
-          ) : recentBundles.length === 0 ? (
+          {recentBundles.length === 0 ? (
             <EmptyLaunches />
           ) : (
             <div>

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { useAppStore } from "@/stores/appStore";
+import { useEscapeHandler } from "@/lib/useKeyboardShortcuts";
 import type { VoiceProfile, LaunchBundle } from "@/types";
 
 interface SearchResult {
@@ -62,17 +63,8 @@ export default function CommandPalette({ onClose }: CommandPaletteProps) {
     setTimeout(() => inputRef.current?.focus(), 50);
   }, []);
 
-  // Escape to close
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+  // Escape to close (via global escape handler stack)
+  useEscapeHandler(onClose, true);
 
   // Build search results
   const results: SearchResult[] = useMemo(() => {

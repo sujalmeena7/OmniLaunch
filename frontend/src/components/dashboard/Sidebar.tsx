@@ -12,7 +12,9 @@ import {
 } from "lucide-react";
 import { useAppStore } from "@/stores/appStore";
 import { useThemeStore } from "@/stores/themeStore";
-import { motion } from "framer-motion";
+import { useEscapeHandler } from "@/lib/useKeyboardShortcuts";
+import { motion, AnimatePresence } from "framer-motion";
+import QuotaDisplay from "@/components/dashboard/QuotaDisplay";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -22,250 +24,209 @@ const NAV_ITEMS = [
   { href: "/dashboard/settings", label: "Settings", icon: SlidersHorizontal },
 ];
 
-export default function Sidebar() {
+function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
   const router = useRouter();
   const pathname = usePathname();
   const { user, sidebarOpen } = useAppStore();
   const { theme, toggleTheme } = useThemeStore();
 
-  const initials =
-    user?.display_name
-      ?.split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2) ||
-    user?.email?.slice(0, 2).toUpperCase() ||
-    "??";
+
+
+  const handleNav = (href: string) => {
+    router.push(href);
+    onNavClick?.();
+  };
 
   return (
-    <aside
-      className="flex flex-col overflow-hidden"
-      style={{
-        width: sidebarOpen ? "260px" : "72px",
-        background: "var(--bg-sidebar-glass)",
-        backdropFilter: "blur(20px)",
-        borderRight: "1px solid var(--border-subtle)",
-        transition: "width 0.25s ease",
-      }}
-    >
-      {/* Logo */}
-      <div
-        className="flex items-center gap-3"
-        style={{
-          height: "80px",
-          padding: "0 24px",
-          marginBottom: "8px",
-        }}
-      >
-        <div
-          className="flex items-center justify-center"
-          style={{
-            width: "36px",
-            height: "36px",
-            borderRadius: "12px",
-            background: "var(--accent-button-bg)",
-            boxShadow: "var(--accent-icon-shadow)",
-            flexShrink: 0,
-          }}
-        >
-          <Rocket size={18} style={{ color: "var(--accent-button-text)" }} />
+    <div className="flex flex-col h-full">
+      {/* Logo Area */}
+      <div style={{ padding: "32px 24px 24px 24px" }}>
+        <div className="flex items-center gap-4">
+          <motion.div
+            whileHover={{ rotate: 10, scale: 1.1 }}
+            className="flex items-center justify-center shrink-0"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "12px",
+              background: "var(--accent-button-bg)",
+              boxShadow: "var(--accent-icon-shadow)",
+            }}
+          >
+            <Rocket size={20} style={{ color: "var(--accent-button-text)" }} />
+          </motion.div>
+          {sidebarOpen && (
+            <span
+              style={{
+                fontSize: "22px",
+                fontWeight: 800,
+                color: "var(--text-secondary)",
+                fontFamily: "var(--font-heading)",
+                letterSpacing: "-0.03em",
+              }}
+            >
+              Omni<span style={{ color: "#4d7c0f" }}>Launch</span>
+            </span>
+          )}
         </div>
-        {sidebarOpen && (
-          <span style={{ fontSize: "20px", fontWeight: 800, color: "var(--text-secondary)", fontFamily: "var(--font-heading)", letterSpacing: "-0.02em" }}>
-            OmniLaunch
-          </span>
-        )}
       </div>
 
-      {/* User Profile */}
-      {sidebarOpen && (
-        <div
-          className="flex flex-col items-center"
-          style={{ padding: "24px 20px", borderBottom: "1px solid var(--border-profile)" }}
+      {/* Navigation Items */}
+      <nav 
+        className="px-4 pb-4 space-y-2 overflow-y-auto scrollbar-hide"
+        style={{ marginTop: "24px" }}
+      >
+        <span 
+          style={{ 
+            display: sidebarOpen ? "block" : "none",
+            padding: "0 12px 12px 12px", 
+            fontSize: "10px", 
+            fontWeight: 800, 
+            color: "var(--text-muted)", 
+            textTransform: "uppercase", 
+            letterSpacing: "0.15em",
+            opacity: 0.6
+          }}
         >
-          <div
-            style={{
-              width: "64px",
-              height: "64px",
-              borderRadius: "50%",
-              background: "var(--bg-avatar)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "22px",
-              fontWeight: 700,
-              color: "var(--text-avatar)",
-              marginBottom: "12px",
-            }}
-          >
-            {initials}
-          </div>
-          <span style={{ fontSize: "15px", fontWeight: 600, color: "var(--text-secondary)" }}>
-            {user?.display_name || "User"}
-          </span>
-          <button
-            style={{
-              fontSize: "12px",
-              color: "var(--text-muted)",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              marginTop: "2px",
-              fontFamily: "var(--font-sans)",
-              transition: "color 0.15s ease",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; }}
-            onClick={() => router.push("/dashboard/settings")}
-          >
-            Edit Profile
-          </button>
-        </div>
-      )}
-
-      {/* Navigation */}
-      <nav className="flex-1 flex flex-col" style={{ padding: "16px 14px", gap: "6px" }}>
+          Menu
+        </span>
+        
         {NAV_ITEMS.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          const isActive = pathname === item.href;
           const Icon = item.icon;
+
           return (
             <motion.button
               key={item.href}
-              whileHover={{ x: 2 }}
-              onClick={() => router.push(item.href)}
-              className="flex items-center gap-3 w-full text-left"
+              onClick={() => handleNav(item.href)}
+              whileHover={{ x: sidebarOpen ? 4 : 0 }}
+              className="group w-full flex items-center relative"
               style={{
-                height: "44px",
-                padding: sidebarOpen ? "0 14px" : "0 10px",
+                height: "48px",
+                padding: sidebarOpen ? "0 16px" : "0",
+                justifyContent: sidebarOpen ? "flex-start" : "center",
                 borderRadius: "14px",
-                border: "none",
-                background: isActive
-                  ? "var(--bg-nav-active)"
-                  : "transparent",
-                color: isActive ? "var(--text-secondary)" : "var(--text-primary)",
-                fontSize: "14px",
-                fontWeight: isActive ? 700 : 500,
+                background: isActive ? "var(--bg-elevated)" : "transparent",
+                border: isActive ? "1px solid var(--border-strong)" : "1px solid transparent",
                 cursor: "pointer",
-                fontFamily: "var(--font-sans)",
-                position: "relative",
                 transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+                boxShadow: isActive ? "var(--shadow-md)" : "none"
               }}
             >
               {isActive && (
                 <motion.div
-                  layoutId="active-pill"
+                  layoutId="nav-active-pill"
+                  className="absolute left-0 w-1 rounded-full"
                   style={{
-                    position: "absolute",
-                    left: 0,
-                    width: "3px",
-                    height: "18px",
+                    height: "24px",
                     background: "var(--accent-lime)",
-                    borderRadius: "0 4px 4px 0",
-                    boxShadow: "0 0 10px var(--accent-lime)",
+                    boxShadow: "0 0 12px rgba(163, 230, 53, 0.8)",
                   }}
                 />
               )}
+              
               <Icon
-                size={18}
+                size={20}
                 style={{
                   color: isActive ? "var(--accent-lime)" : "var(--text-muted)",
-                  flexShrink: 0,
-                  opacity: isActive ? 1 : 0.7,
+                  transition: "all 0.2s ease",
                 }}
+                className="group-hover:scale-110"
               />
               {sidebarOpen && (
-                <span style={{ whiteSpace: "nowrap" }}>{item.label}</span>
+                <span
+                  style={{
+                    marginLeft: "14px",
+                    fontSize: "14px",
+                    fontWeight: isActive ? 900 : 700,
+                    color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                    transition: "all 0.2s ease",
+                  }}
+                  className="group-hover:text-white"
+                >
+                  {item.label}
+                </span>
               )}
             </motion.button>
           );
         })}
       </nav>
 
-      {/* Theme Toggle */}
-      <div
-        className="flex flex-col"
-        style={{ padding: "16px 14px", gap: "12px", borderTop: "1px solid var(--border-subtle)" }}
-      >
-        {sidebarOpen && (
-          <div
-            role="switch"
-            aria-checked={theme === "dark"}
-            aria-label="Toggle dark mode"
-            tabIndex={0}
-            className="flex items-center justify-between"
-            style={{ padding: "0 6px", cursor: "pointer" }}
-            onClick={toggleTheme}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                toggleTheme();
-              }
+
+
+    </div>
+  );
+}
+
+/** Mobile overlay sidebar with backdrop and slide-in animation */
+function MobileSidebar() {
+  const { mobileSidebarOpen, setMobileSidebarOpen } = useAppStore();
+
+  // Close on Escape key (via global escape handler stack)
+  useEscapeHandler(() => setMobileSidebarOpen(false), mobileSidebarOpen);
+
+  return (
+    <AnimatePresence>
+      {mobileSidebarOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-0"
+            style={{ background: "rgba(0, 0, 0, 0.5)" }}
+            onClick={() => setMobileSidebarOpen(false)}
+            aria-label="Close sidebar"
+          />
+
+          {/* Sidebar panel */}
+          <motion.aside
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="absolute top-0 left-0 h-full flex flex-col overflow-hidden"
+            style={{
+              width: "260px",
+              background: "var(--bg-sidebar-glass)",
+              backdropFilter: "blur(20px)",
+              borderRight: "1px solid var(--border-subtle)",
             }}
           >
-            <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>Light</span>
-            <div
-              style={{
-                width: "36px",
-                height: "20px",
-                borderRadius: "10px",
-                background: "var(--bg-elevated)",
-                border: "1px solid var(--border-default)",
-                position: "relative",
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  top: "2px",
-                  left: theme === "dark" ? "18px" : "2px",
-                  width: "14px",
-                  height: "14px",
-                  borderRadius: "50%",
-                  background: "var(--accent-lime)",
-                  transition: "left 0.2s ease",
-                }}
-              />
-            </div>
-            <span style={{ fontSize: "12px", color: "var(--text-secondary)", fontWeight: 500 }}>Dark</span>
-          </div>
-        )}
-        {!sidebarOpen && (
-          <div
-            role="switch"
-            aria-checked={theme === "dark"}
-            aria-label="Toggle dark mode"
-            tabIndex={0}
-            className="flex items-center justify-center"
-            style={{ cursor: "pointer" }}
-            onClick={toggleTheme}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                toggleTheme();
-              }
-            }}
-          >
-            <div
-              style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "10px",
-                background: "var(--bg-elevated)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {theme === "dark" ? (
-                <Moon size={14} style={{ color: "var(--accent-lime)" }} />
-              ) : (
-                <Sun size={14} style={{ color: "var(--accent-lime)" }} />
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+            <SidebarContent onNavClick={() => setMobileSidebarOpen(false)} />
+          </motion.aside>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/** Desktop sidebar — hidden on mobile */
+function DesktopSidebar() {
+  const { sidebarOpen } = useAppStore();
+
+  return (
+    <aside
+      className="hidden md:flex flex-col overflow-hidden"
+      style={{
+        width: sidebarOpen ? "260px" : "72px",
+        background: "var(--bg-sidebar-glass)",
+        borderRight: "1px solid var(--border-subtle)",
+        transition: "width 0.25s ease",
+      }}
+    >
+      <SidebarContent />
     </aside>
+  );
+}
+
+export default function Sidebar() {
+  return (
+    <>
+      <DesktopSidebar />
+      <MobileSidebar />
+    </>
   );
 }

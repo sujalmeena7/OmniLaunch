@@ -8,7 +8,7 @@ import { useState, useCallback } from "react";
 import type { VoiceProfile, PlatformRule } from "@/types";
 import { useValidation } from "@/hooks/useValidation";
 import { motion } from "framer-motion";
-import { Rocket, AlertTriangle, Link2, Loader2 } from "lucide-react";
+import { Rocket, AlertTriangle, Link2, Loader2, ArrowUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export interface ProductFormData {
@@ -26,6 +26,7 @@ interface ProductFormProps {
   isGenerating: boolean;
   voiceProfiles: VoiceProfile[];
   platforms: PlatformRule[];
+  quotaExhausted?: boolean;
 }
 
 const labelStyle: React.CSSProperties = {
@@ -131,6 +132,7 @@ export default function ProductForm({
   isGenerating,
   voiceProfiles,
   platforms,
+  quotaExhausted = false,
 }: ProductFormProps) {
   const router = useRouter();
   const [voiceProfileId, setVoiceProfileId] = useState(
@@ -222,7 +224,7 @@ export default function ProductForm({
   ]);
 
   return (
-    <div className="flex flex-col" style={{ height: "100%", overflow: "hidden", background: "var(--bg-elevated)", borderRight: "1px solid var(--border-subtle)" }}>
+    <div className="flex flex-col" style={{ height: "100%", overflow: "hidden", background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)", borderRadius: "24px", boxShadow: "var(--shadow-md)" }}>
       {/* Scrollable form area */}
       <div className="flex-1 overflow-y-auto" style={{ padding: "24px" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -480,40 +482,99 @@ export default function ProductForm({
           background: "var(--bg-primary)",
         }}
       >
-        <motion.button
-          onClick={handleSubmit}
-          disabled={isGenerating}
-          whileTap={{ scale: 0.98 }}
-          transition={{ duration: 0.1 }}
-          className="flex items-center justify-center"
-          style={{
-            width: "100%",
-            height: "44px",
-            borderRadius: "12px",
-            border: "none",
-            background: "linear-gradient(135deg, #C0FF33 0%, #D4F542 100%)",
-            color: "#0f1a4a",
-            fontWeight: 700,
-            fontSize: "15px",
-            cursor: isGenerating ? "not-allowed" : "pointer",
-            opacity: isGenerating ? 0.4 : 1,
-            fontFamily: "var(--font-sans)",
-            gap: "10px",
-            boxShadow: "0 8px 24px rgba(212, 245, 66, 0.2)",
-          }}
-        >
-          {isGenerating ? (
-            <>
-              <Loader2 size={16} className="animate-spin" />
-              Generating...
-            </>
-          ) : (
-            <>
-              <Rocket size={16} />
-              Generate bundle
-            </>
-          )}
-        </motion.button>
+        {quotaExhausted ? (
+          <div
+            className="flex flex-col items-center"
+            style={{ gap: "10px" }}
+          >
+            <div
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                borderRadius: "12px",
+                background: "rgba(250, 82, 82, 0.08)",
+                border: "1px solid rgba(250, 82, 82, 0.2)",
+                textAlign: "center",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "13px",
+                  color: "var(--text-secondary)",
+                  margin: 0,
+                  fontWeight: 500,
+                }}
+              >
+                Launch quota exhausted
+              </p>
+              <p
+                style={{
+                  fontSize: "12px",
+                  color: "var(--text-muted)",
+                  margin: "4px 0 0",
+                }}
+              >
+                Upgrade your plan to generate more bundles
+              </p>
+            </div>
+            <a
+              href="/dashboard/settings"
+              className="flex items-center justify-center"
+              style={{
+                width: "100%",
+                height: "44px",
+                borderRadius: "12px",
+                border: "none",
+                background: "linear-gradient(135deg, #C0FF33 0%, #D4F542 100%)",
+                color: "#0f1a4a",
+                fontWeight: 700,
+                fontSize: "15px",
+                textDecoration: "none",
+                fontFamily: "var(--font-sans)",
+                gap: "8px",
+                boxShadow: "0 8px 24px rgba(212, 245, 66, 0.2)",
+              }}
+            >
+              <ArrowUpRight size={16} />
+              Upgrade Plan
+            </a>
+          </div>
+        ) : (
+          <motion.button
+            onClick={handleSubmit}
+            disabled={isGenerating}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.1 }}
+            className="flex items-center justify-center"
+            style={{
+              width: "100%",
+              height: "44px",
+              borderRadius: "12px",
+              border: "none",
+              background: "linear-gradient(135deg, #C0FF33 0%, #D4F542 100%)",
+              color: "#0f1a4a",
+              fontWeight: 700,
+              fontSize: "15px",
+              cursor: isGenerating ? "not-allowed" : "pointer",
+              opacity: isGenerating ? 0.4 : 1,
+              fontFamily: "var(--font-sans)",
+              gap: "10px",
+              boxShadow: "0 8px 24px rgba(212, 245, 66, 0.2)",
+            }}
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 size={16} className="animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Rocket size={16} />
+                Generate bundle
+              </>
+            )}
+          </motion.button>
+        )}
       </div>
     </div>
   );

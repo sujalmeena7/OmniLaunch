@@ -30,13 +30,15 @@ export default function PlatformTabs({
 
   return (
     <div
-      className="flex flex-shrink-0"
+      className="flex flex-shrink-0 overflow-x-auto md:overflow-x-visible scrollbar-hide flex-nowrap"
       style={{
         height: "40px",
         borderBottom: "1px solid var(--border-subtle)",
         gap: "4px",
         padding: "0 24px",
         alignItems: "center",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
       }}
     >
       {posts.map((post, i) => {
@@ -61,6 +63,8 @@ export default function PlatformTabs({
               cursor: "pointer",
               fontFamily: "var(--font-sans)",
               transition: "all 0.15s ease",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
             }}
             onMouseEnter={(e) => {
               if (!isActive) e.currentTarget.style.color = "var(--text-secondary)";

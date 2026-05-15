@@ -7,6 +7,9 @@ import { useAppStore } from "@/stores/appStore";
 import type { UserProfile } from "@/types";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Header from "@/components/dashboard/Header";
+import { PageErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { PageTransition } from "@/components/ui/PageTransition";
+import { TrialBanner } from "@/components/billing/TrialBanner";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -55,14 +58,28 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     >
       <Sidebar />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <Header />
 
+        {user?.is_trial && user?.trial_ends_at && (
+          <div style={{ padding: "16px 40px 0 40px" }}>
+            <TrialBanner
+              trialEndsAt={user.trial_ends_at}
+              onUpgrade={() => router.push("/dashboard/settings")}
+            />
+          </div>
+        )}
+
         <main
-          className="flex-1 overflow-auto"
-          style={{ padding: "32px" }}
+          style={{ flex: 1, overflow: "auto" }}
         >
-          {children}
+          <div style={{ padding: "16px 48px 32px 48px" }}>
+            <PageErrorBoundary>
+              <PageTransition>
+                {children}
+              </PageTransition>
+            </PageErrorBoundary>
+          </div>
         </main>
       </div>
     </div>

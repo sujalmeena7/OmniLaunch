@@ -9,7 +9,32 @@ export interface UserProfile {
   display_name: string | null;
   plan: "free" | "pro" | "team";
   launches_remaining: number;
+  launches_per_month: number;
   avatar_url?: string;
+  trial_ends_at: string | null;
+  is_trial: boolean;
+}
+
+// ── Billing ───────────────────────────────────────────────────
+export interface Subscription {
+  id: string;
+  plan: "free" | "pro" | "team";
+  status: "active" | "past_due" | "canceled" | "trialing";
+  razorpay_subscription_id: string | null;
+  current_period_end: string | null;
+  launches_per_month: number;
+  launches_used: number;
+}
+
+export interface BillingEvent {
+  id: string;
+  event_type: string;
+  amount_paise: number;
+  currency: string;
+  status: string;
+  receipt_url: string | null;
+  created_at: string;
+  plan?: string;
 }
 
 export interface AuthResponse {

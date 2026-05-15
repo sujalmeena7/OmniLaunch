@@ -10,6 +10,7 @@ interface AppState {
   user: UserProfile | null;
   isAuthenticated: boolean;
   setUser: (user: UserProfile | null) => void;
+  decrementLaunchesRemaining: () => void;
   logout: () => void;
 
   // Voice
@@ -30,6 +31,8 @@ interface AppState {
   // UI State
   sidebarOpen: boolean;
   toggleSidebar: () => void;
+  mobileSidebarOpen: boolean;
+  setMobileSidebarOpen: (open: boolean) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -37,6 +40,16 @@ export const useAppStore = create<AppState>((set) => ({
   user: null,
   isAuthenticated: false,
   setUser: (user) => set({ user, isAuthenticated: !!user }),
+  decrementLaunchesRemaining: () =>
+    set((state) => {
+      if (!state.user) return state;
+      return {
+        user: {
+          ...state.user,
+          launches_remaining: Math.max(0, state.user.launches_remaining - 1),
+        },
+      };
+    }),
   logout: () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("omnilaunch_token");
@@ -74,4 +87,6 @@ export const useAppStore = create<AppState>((set) => ({
   // UI
   sidebarOpen: true,
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
+  mobileSidebarOpen: false,
+  setMobileSidebarOpen: (open) => set({ mobileSidebarOpen: open }),
 }));

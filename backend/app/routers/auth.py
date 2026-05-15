@@ -8,6 +8,7 @@ from app.db.supabase_client import get_supabase_client, get_supabase_public_clie
 from app.models.schemas import (
     SignupRequest, LoginRequest, AuthResponse, UserProfile
 )
+from app.services.trial_service import assign_trial, check_trial_expiry, expire_trial
 
 router = APIRouter()
 security = HTTPBearer()
@@ -57,6 +58,9 @@ async def signup(req: SignupRequest):
             "status": "active",
             "launches_per_month": 3,
         }).execute()
+
+        # Assign 14-day trial (10 launches) to new user
+        assign_trial(auth_response.user.id)
 
         return AuthResponse(
             access_token=auth_response.session.access_token,
@@ -124,9 +128,18 @@ async def refresh_token(request: Request):
 
 @router.get("/me", response_model=UserProfile)
 async def get_me(user: dict = Depends(get_current_user)):
-    """Get the current user's profile."""
+    """Get the current user's profile.
+
+    Also checks if the user's trial has expired and resets to Free plan if so.
+    """
+    user_id = user["id"]
+
+    # Check trial expiry and reset to Free plan if expired
+    if check_trial_expiry(user_id):
+        expire_trial(user_id)
+
     sb = get_supabase_client()
-    result = sb.table("profiles").select("*").eq("id", user["id"]).single().execute()
+    result = sb.table("profiles").select("*").eq("id", user_id).single().execute()
     if not result.data:
         raise HTTPException(status_code=404, detail="Profile not found")
     return UserProfile(**result.data)

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { PLATFORM_META } from "@/types";
+import { BundlesSkeleton } from "@/components/ui/skeletons";
 
 interface BundleSummary {
   id: string;
@@ -34,16 +35,18 @@ export default function BundlesPage() {
     failed: "var(--accent-red)",
   };
 
+  if (loading) {
+    return <BundlesSkeleton />;
+  }
+
   return (
-    <div style={{ maxWidth: "800px" }}>
+    <div style={{ maxWidth: "900px", width: "100%" }}>
       <h1 style={{ fontSize: "24px", fontWeight: 800, marginBottom: "8px" }}>📦 Launch Bundles</h1>
       <p style={{ color: "var(--text-secondary)", fontSize: "14px", marginBottom: "24px" }}>
         All your generated launch bundles in one place.
       </p>
 
-      {loading ? (
-        <div style={{ color: "var(--text-muted)", fontSize: "14px" }}>Loading...</div>
-      ) : bundles.length === 0 ? (
+      {bundles.length === 0 ? (
         <div
           style={{
             padding: "48px",
@@ -75,32 +78,31 @@ export default function BundlesPage() {
           </button>
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div className="flex flex-col gap-3">
           {bundles.map((bundle) => (
             <button
               key={bundle.id}
               onClick={() => router.push(`/dashboard/bundles/${bundle.id}`)}
+              className="group flex items-center justify-between w-full text-left"
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
                 padding: "20px 24px",
-                borderRadius: "var(--radius-lg)",
-                background: "var(--bg-secondary)",
+                borderRadius: "16px",
+                background: "var(--bg-surface)",
                 border: "1px solid var(--border-subtle)",
                 cursor: "pointer",
-                transition: "all 0.15s",
-                width: "100%",
-                textAlign: "left",
+                transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
                 fontFamily: "var(--font-sans)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
               }}
               onMouseOver={(e) => {
-                e.currentTarget.style.borderColor = "var(--border-default)";
-                e.currentTarget.style.transform = "translateY(-1px)";
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 8px 16px rgba(0,0,0,0.04)";
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.borderColor = "var(--border-subtle)";
                 e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.02)";
               }}
             >
               <div>

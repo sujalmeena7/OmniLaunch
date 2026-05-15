@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { ToastContainer } from "@/components/ui/ToastContainer";
+import { RootErrorBoundary } from "@/components/ui/ErrorBoundary";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -32,7 +34,12 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <RootErrorBoundary>
+            {children}
+          </RootErrorBoundary>
+          <ToastContainer />
+        </ThemeProvider>
       </body>
     </html>
   );

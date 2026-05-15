@@ -12,7 +12,7 @@ function FloatingMockup() {
       style={{
         position: "relative",
         width: "100%",
-        maxWidth: "720px",
+        maxWidth: "800px",
         fontFamily: "var(--font-sans)",
       }}
     >
@@ -42,7 +42,7 @@ function FloatingMockup() {
         {/* Dashboard content */}
         <div className="flex" style={{ minHeight: "340px" }}>
           {/* Sidebar */}
-          <div style={{ width: "60px", borderRight: "1px solid rgba(0,0,0,0.05)", background: "#f8f9fc", display: "flex", flexDirection: "column", alignItems: "center", padding: "14px 0", gap: "14px" }}>
+          <div style={{ width: "60px", borderRight: "1px solid rgba(0,0,0,0.08)", background: "#eef0f5", display: "flex", flexDirection: "column", alignItems: "center", padding: "14px 0", gap: "14px" }}>
             {["#7F77DD", "#d0daf0", "#d0daf0", "#d0daf0", "#d0daf0"].map((c, i) => (
               <div key={i} style={{ width: "26px", height: "26px", borderRadius: "7px", background: c }} />
             ))}
@@ -113,7 +113,7 @@ function FloatingMockup() {
           position: "absolute",
           bottom: "-30px",
           left: "-40px",
-          width: "180px",
+          width: "210px",
           borderRadius: "24px",
           background: "linear-gradient(180deg, #1a1133 0%, #0d0820 100%)",
           border: "1px solid rgba(255,255,255,0.08)",
@@ -139,45 +139,46 @@ function FloatingMockup() {
 
           {/* Header */}
           <div className="flex items-center justify-between">
-            <span style={{ fontSize: "13px", fontWeight: 700, color: "#ffffff" }}>Dashboard</span>
-            <div style={{ width: "22px", height: "22px", borderRadius: "50%", background: "linear-gradient(135deg, #7F77DD, #5c7cfa)" }} />
+            <span style={{ fontSize: "13px", fontWeight: 700, color: "#ffffff" }}>OmniLaunch</span>
+            <div style={{ width: "22px", height: "22px", borderRadius: "50%", background: "linear-gradient(135deg, #C0FF33, #a3e635)" }} />
           </div>
 
           {/* Date range */}
           <div className="flex items-center" style={{ gap: "6px", marginBottom: "2px" }}>
-            <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)" }}>20 Jul - 9 Aug 2025</span>
+            <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)" }}>This Month</span>
             <span style={{ fontSize: "8px", color: "rgba(255,255,255,0.3)" }}>|</span>
-            <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)" }}>Last 7 Days</span>
+            <span style={{ fontSize: "9px", color: "rgba(255,255,255,0.5)" }}>16 Launches</span>
           </div>
 
-          {/* My Portfolio dark card */}
+          {/* Launch Stats card */}
           <div style={{ background: "linear-gradient(145deg, #1e1a3a, #15122e)", borderRadius: "14px", padding: "14px", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.4)", marginBottom: "6px" }}>My Portfolio</div>
-            <div style={{ fontSize: "22px", fontWeight: 700, color: "#ffffff" }}>$96,321</div>
+            <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.4)", marginBottom: "6px" }}>Voice DNA Match</div>
+            <div style={{ fontSize: "22px", fontWeight: 700, color: "#ffffff" }}>94%</div>
             <div className="flex items-center" style={{ gap: "6px", marginTop: "4px", marginBottom: "10px" }}>
-              <span style={{ fontSize: "10px", color: "#D4F542", fontWeight: 600 }}>+14.93%</span>
+              <span style={{ fontSize: "10px", color: "#D4F542", fontWeight: 600 }}>+2.4%</span>
               <div className="flex items-center" style={{ gap: "4px" }}>
-                <div style={{ width: "14px", height: "14px", borderRadius: "50%", background: "#627EEA" }} />
-                <span style={{ fontSize: "8px", color: "rgba(255,255,255,0.5)" }}>ETH</span>
+                <div style={{ width: "14px", height: "14px", borderRadius: "50%", background: "#1DA1F2" }} />
+                <span style={{ fontSize: "8px", color: "rgba(255,255,255,0.5)" }}>Twitter</span>
               </div>
               <div className="flex items-center" style={{ gap: "4px" }}>
-                <div style={{ width: "14px", height: "14px", borderRadius: "50%", background: "#F7931A" }} />
-                <span style={{ fontSize: "8px", color: "rgba(255,255,255,0.5)" }}>BTC</span>
+                <div style={{ width: "14px", height: "14px", borderRadius: "50%", background: "#0A66C2" }} />
+                <span style={{ fontSize: "8px", color: "rgba(255,255,255,0.5)" }}>LinkedIn</span>
               </div>
             </div>
             <div className="flex" style={{ gap: "6px" }}>
-              <div style={{ flex: 1, height: "28px", borderRadius: "7px", background: "linear-gradient(135deg, #7F77DD, #5c7cfa)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 600, color: "#ffffff" }}>Top-Up</div>
-              <div style={{ flex: 1, height: "28px", borderRadius: "7px", background: "rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 600, color: "#ffffff" }}>Withdraw</div>
+              <div style={{ flex: 1, height: "28px", borderRadius: "7px", background: "linear-gradient(135deg, #C0FF33, #a3e635)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 700, color: "#0f172a" }}>New Launch</div>
+              <div style={{ flex: 1, height: "28px", borderRadius: "7px", background: "rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 600, color: "#ffffff" }}>Voice Lab</div>
             </div>
           </div>
 
-          {/* Asset Details */}
+          {/* Recent Launch */}
           <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: "12px", padding: "12px", border: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div>
-              <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.4)", marginBottom: "2px" }}>Asset Details</div>
-              <div style={{ fontSize: "16px", fontWeight: 700, color: "#ffffff" }}>$96,321</div>
+              <div style={{ fontSize: "9px", color: "rgba(255,255,255,0.4)", marginBottom: "2px" }}>Latest Launch</div>
+              <div style={{ fontSize: "12px", fontWeight: 700, color: "#ffffff" }}>SaaS Product Launch</div>
+              <div style={{ fontSize: "8px", color: "rgba(255,255,255,0.4)", marginTop: "2px" }}>3 platforms · 12 posts</div>
             </div>
-            <div style={{ fontSize: "10px", color: "#D4F542", fontWeight: 600 }}>+0.84%</div>
+            <div style={{ fontSize: "9px", color: "#D4F542", fontWeight: 600, background: "rgba(163,230,53,0.1)", padding: "3px 8px", borderRadius: "6px" }}>Live</div>
           </div>
 
           {/* Bottom nav */}
@@ -205,7 +206,7 @@ export default function Hero() {
       style={{
         position: "relative",
         minHeight: "100vh",
-        paddingTop: "104px",
+        paddingTop: "64px",
         fontFamily: "var(--font-sans)",
         background: "transparent",
         overflow: "hidden",
@@ -214,7 +215,7 @@ export default function Hero() {
       {/* Main hero content */}
       <div
         className="grid grid-cols-1 lg:grid-cols-2 items-center"
-        style={{ maxWidth: "1100px", margin: "0 auto", padding: "60px 24px 80px", gap: "48px" }}
+        style={{ maxWidth: "1200px", margin: "0 auto", padding: "60px 24px 80px 48px", gap: "48px" }}
       >
         {/* Left column */}
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -233,7 +234,7 @@ export default function Hero() {
               border: "1px solid rgba(255,255,255,0.08)",
               fontSize: "13px",
               fontWeight: 500,
-              color: "var(--text-secondary)",
+              color: "#ffffff",
             }}
           >
             <Star size={14} style={{ color: "var(--accent-amber)", fill: "var(--accent-amber)" }} />
@@ -246,18 +247,16 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] as const }}
             style={{
-              fontSize: "clamp(36px, 4.5vw, 56px)",
+              fontSize: "clamp(40px, 5vw, 62px)",
               fontWeight: 800,
-              lineHeight: 1.08,
+              lineHeight: 1.05,
               letterSpacing: "-0.03em",
-              color: "var(--text-secondary)",
+              color: "#ffffff",
               margin: 0,
               fontFamily: "var(--font-heading)",
             }}
           >
-            The AI Social Launch{" "}
-            <span style={{ color: "var(--accent-lime)" }}>Platform</span>{" "}
-            for Indie Hackers
+            The AI Launch <span style={{ color: "var(--accent-lime)" }}>Platform</span><br />for Indie Hackers
           </motion.h1>
 
           {/* Subheadline */}

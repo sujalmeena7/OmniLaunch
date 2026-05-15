@@ -4,7 +4,8 @@
 
 "use client";
 
-import { Check, AlertTriangle, X } from "lucide-react";
+import { useState } from "react";
+import { Check, AlertTriangle, X, ChevronDown, ChevronUp } from "lucide-react";
 import type { RuleCheck } from "@/types";
 import VoiceMatchMeter from "./VoiceMatchMeter";
 
@@ -12,6 +13,7 @@ interface ValidationGutterProps {
   checks: RuleCheck[];
   voiceMatchScore: number;
   aiIsmsRemoved: string[];
+  collapsible?: boolean;
 }
 
 function StatusIcon({ status }: { status: string }) {
@@ -28,18 +30,146 @@ export default function ValidationGutter({
   checks,
   voiceMatchScore,
   aiIsmsRemoved,
+  collapsible = false,
 }: ValidationGutterProps) {
+  const [expanded, setExpanded] = useState(false);
+
   const passed = checks.filter((c) => c.status === "pass").length;
+  const warnings = checks.filter((c) => c.status === "warning").length;
+  const failed = checks.filter((c) => c.status === "fail").length;
   const total = checks.length;
 
   const allPassed = passed === total && total > 0;
-  const hasFailures = checks.some((c) => c.status === "fail");
+  const hasFailures = failed > 0;
   const summaryColor = hasFailures
     ? "var(--accent-red)"
     : allPassed
     ? "var(--accent-teal)"
     : "var(--accent-amber)";
 
+  // Collapsible summary bar for mobile
+  if (collapsible) {
+    return (
+      <div
+        style={{
+          marginTop: "20px",
+          borderTop: "1px solid var(--border-subtle)",
+          paddingTop: "0",
+        }}
+      >
+        {/* Summary bar — always visible */}
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex items-center justify-between"
+          style={{
+            width: "100%",
+            padding: "12px 0",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            fontFamily: "var(--font-sans)",
+          }}
+        >
+          <span style={{ fontSize: "12px", fontWeight: 500, color: "var(--text-secondary)" }}>
+            Validation
+          </span>
+          <div className="flex items-center" style={{ gap: "10px" }}>
+            <span className="flex items-center" style={{ gap: "4px", fontSize: "11px" }}>
+              <Check size={12} style={{ color: "var(--accent-teal)" }} />
+              <span style={{ color: "var(--accent-teal)" }}>{passed}</span>
+            </span>
+            {warnings > 0 && (
+              <span className="flex items-center" style={{ gap: "4px", fontSize: "11px" }}>
+                <AlertTriangle size={12} style={{ color: "var(--accent-amber)" }} />
+                <span style={{ color: "var(--accent-amber)" }}>{warnings}</span>
+              </span>
+            )}
+            {failed > 0 && (
+              <span className="flex items-center" style={{ gap: "4px", fontSize: "11px" }}>
+                <X size={12} style={{ color: "var(--accent-red)" }} />
+                <span style={{ color: "var(--accent-red)" }}>{failed}</span>
+              </span>
+            )}
+            {expanded ? (
+              <ChevronUp size={14} style={{ color: "var(--text-muted)" }} />
+            ) : (
+              <ChevronDown size={14} style={{ color: "var(--text-muted)" }} />
+            )}
+          </div>
+        </button>
+
+        {/* Expanded content */}
+        {expanded && (
+          <div style={{ paddingBottom: "16px" }}>
+            {/* Voice Match Meter */}
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: "16px" }}>
+              <VoiceMatchMeter score={Math.round(voiceMatchScore * 100)} />
+            </div>
+
+            {/* Rule checks */}
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {checks.map((check, i) => (
+                <div
+                  key={i}
+                  className="flex"
+                  style={{
+                    gap: "8px",
+                    padding: "8px 0",
+                    fontSize: "12px",
+                    alignItems: "flex-start",
+                    borderBottom:
+                      i < checks.length - 1 ? "1px solid var(--border-subtle)" : "none",
+                  }}
+                >
+                  <div style={{ paddingTop: "1px", flexShrink: 0 }}>
+                    <StatusIcon status={check.status} />
+                  </div>
+                  <span style={{ color: "var(--text-secondary)", lineHeight: 1.4 }}>
+                    {check.detail}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* AI-isms removed */}
+            {aiIsmsRemoved.length > 0 && (
+              <div style={{ marginTop: "16px" }}>
+                <span
+                  style={{
+                    fontSize: "11px",
+                    color: "var(--text-muted)",
+                    display: "block",
+                    marginBottom: "6px",
+                  }}
+                >
+                  AI-isms removed
+                </span>
+                <div className="flex flex-wrap" style={{ gap: "4px" }}>
+                  {aiIsmsRemoved.map((item, i) => (
+                    <span
+                      key={i}
+                      style={{
+                        padding: "2px 8px",
+                        borderRadius: "9999px",
+                        background: "rgba(250, 82, 82, 0.08)",
+                        color: "rgba(250, 82, 82, 0.8)",
+                        fontSize: "11px",
+                        border: "1px solid rgba(250, 82, 82, 0.15)",
+                      }}
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Default expanded view for desktop
   return (
     <div
       style={{

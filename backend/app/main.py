@@ -9,7 +9,7 @@ from slowapi.errors import RateLimitExceeded
 
 from app.config import get_settings
 from app.rate_limit import limiter
-from app.routers import auth, voice, platforms, bundles, posts
+from app.routers import auth, voice, platforms, bundles, posts, billing
 from app.routers.sse import router as sse_router
 
 
@@ -40,7 +40,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins,
+    allow_origins=settings.get_cors_origins_list(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -53,6 +53,7 @@ app.include_router(platforms.router, prefix="/api/v1", tags=["Platforms"])
 app.include_router(bundles.router, prefix="/api/v1", tags=["Launch Bundles"])
 app.include_router(posts.router, prefix="/api/v1", tags=["Posts"])
 app.include_router(sse_router, prefix="/api/v1", tags=["SSE"])
+app.include_router(billing.router, prefix="/api/v1/billing", tags=["Billing"])
 
 
 @app.get("/api/health")
