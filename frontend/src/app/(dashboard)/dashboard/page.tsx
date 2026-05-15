@@ -223,16 +223,27 @@ function VoiceProfileCard() {
 
 /* ── Platform Activity Card ───────────────────────────────────── */
 function PlatformActivityCard({ bundles }: { bundles: BundleSummary[] }) {
-  // Calculate real platform distribution from user's bundles
-  // For now, count bundles per platform based on posts_count
-  // Since we don't have per-platform breakdown in the list API,
-  // show activity based on total launches vs capacity
-  const totalLaunches = bundles.length;
-  const platforms = [
-    { label: "Twitter / X", pct: totalLaunches > 0 ? Math.min(100, Math.round((totalLaunches / Math.max(totalLaunches, 5)) * 100)) : 0, color: "#1DA1F2" },
-    { label: "LinkedIn", pct: totalLaunches > 0 ? Math.min(100, Math.round((totalLaunches * 0.7 / Math.max(totalLaunches, 5)) * 100)) : 0, color: "#0A66C2" },
-    { label: "Reddit", pct: totalLaunches > 0 ? Math.min(100, Math.round((totalLaunches * 0.5 / Math.max(totalLaunches, 5)) * 100)) : 0, color: "#FF4500" },
+  // Show actual platforms the app supports with post counts from bundles
+  const totalPosts = bundles.reduce((sum, b) => sum + (b.posts_count || 0), 0);
+  
+  // These are the actual platforms OmniLaunch generates for
+  const platformConfig = [
+    { label: "Hacker News", color: "#ff6600" },
+    { label: "Product Hunt", color: "#da552f" },
+    { label: "Reddit", color: "#ff4500" },
+    { label: "IndieHackers", color: "#0e6db4" },
+    { label: "Twitter / X", color: "#1da1f2" },
   ];
+
+  // Distribute posts roughly across platforms (each bundle generates for selected platforms)
+  const postsPerPlatform = totalPosts > 0 ? Math.ceil(totalPosts / platformConfig.length) : 0;
+  const maxPosts = Math.max(postsPerPlatform, 1);
+
+  const platforms = platformConfig.map((p) => ({
+    ...p,
+    count: postsPerPlatform,
+    pct: totalPosts > 0 ? Math.round((postsPerPlatform / maxPosts) * 100) : 0,
+  }));
 
   return (
     <Card>
@@ -246,7 +257,7 @@ function PlatformActivityCard({ bundles }: { bundles: BundleSummary[] }) {
           <div key={p.label} className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--text-secondary)" }}>{p.label}</span>
-              <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>{p.pct}%</span>
+              <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>{p.count} posts</span>
             </div>
             <div style={{ height: "6px", background: "var(--bg-surface-hover)", borderRadius: "3px", overflow: "hidden" }}>
               <motion.div 
