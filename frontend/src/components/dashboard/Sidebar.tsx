@@ -152,9 +152,12 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
         })}
       </nav>
 
+      {/* Spacer to push quota to bottom */}
+      <div className="flex-1" />
+
       {/* Quota Display — bottom of sidebar */}
       {sidebarOpen && (
-        <div className="mt-auto">
+        <div style={{ paddingBottom: "16px" }}>
           <QuotaDisplay />
         </div>
       )}
@@ -214,12 +217,17 @@ function DesktopSidebar() {
 
   return (
     <aside
-      className="hidden md:flex flex-col overflow-hidden"
+      className="hidden md:flex flex-col"
       style={{
         width: sidebarOpen ? "260px" : "72px",
+        height: "100vh",
+        position: "sticky",
+        top: 0,
         background: "var(--bg-sidebar-glass)",
         borderRight: "1px solid var(--border-subtle)",
         transition: "width 0.25s ease",
+        overflow: "hidden",
+        flexShrink: 0,
       }}
     >
       <SidebarContent />

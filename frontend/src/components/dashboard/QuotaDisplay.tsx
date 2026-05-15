@@ -71,85 +71,127 @@ export default function QuotaDisplay() {
   const isInTrial = trialDaysLeft !== null && trialDaysLeft > 0;
 
   return (
-    <div className="px-3 py-1.5">
+    <div style={{ padding: "12px 14px 20px" }}>
       <div
-        className="rounded-xl p-3.5 transition-all duration-300"
         style={{
-          background: "rgba(255, 255, 255, 0.03)",
-          border: `1px solid ${isExhausted ? "rgba(239, 68, 68, 0.2)" : showWarning ? "rgba(245, 158, 11, 0.2)" : "rgba(255, 255, 255, 0.05)"}`,
+          borderRadius: "16px",
+          padding: "18px 16px",
+          background: "linear-gradient(135deg, rgba(163, 230, 53, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%)",
+          border: isExhausted 
+            ? "1px solid rgba(239, 68, 68, 0.25)" 
+            : "1px solid rgba(163, 230, 53, 0.12)",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
         }}
       >
-        {/* Plan name + Upgrade */}
-        <div className="flex items-center justify-between mb-2.5">
-          <span
-            style={{
-              fontSize: "11px",
-              fontWeight: 800,
-              color: "var(--text-secondary)",
+        {/* Plan badge + Upgrade */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <div style={{ 
+              width: "6px", 
+              height: "6px", 
+              borderRadius: "50%", 
+              background: isExhausted ? "#ef4444" : "var(--accent-lime)",
+              boxShadow: isExhausted ? "0 0 6px #ef4444" : "0 0 6px var(--accent-lime)",
+            }} />
+            <span style={{
+              fontSize: "10px",
+              fontWeight: 700,
+              color: "var(--text-muted)",
               textTransform: "uppercase",
-              letterSpacing: "0.06em",
-            }}
-          >
-            {plan.toUpperCase()} PLAN
-          </span>
+              letterSpacing: "0.1em",
+            }}>
+              {plan.toUpperCase()} PLAN
+            </span>
+          </div>
           {plan === "free" && (
             <a
-              href="/dashboard/settings"
+              href="/dashboard/subscription"
               style={{
-                fontSize: "11px",
+                fontSize: "10px",
                 fontWeight: 800,
                 color: "var(--accent-lime)",
                 textDecoration: "none",
                 textTransform: "uppercase",
-                letterSpacing: "0.04em",
+                letterSpacing: "0.05em",
+                padding: "3px 8px",
+                borderRadius: "6px",
+                background: "rgba(163, 230, 53, 0.08)",
+                transition: "all 0.2s ease",
               }}
             >
               Upgrade
             </a>
           )}
           {isInTrial && (
-            <span style={{ fontSize: "9px", color: "var(--accent-lime)", fontWeight: 800, textTransform: "uppercase", background: "rgba(163, 230, 53, 0.1)", padding: "2px 6px", borderRadius: "4px" }}>
-              Trial
+            <span style={{ 
+              fontSize: "9px", 
+              color: "var(--accent-lime)", 
+              fontWeight: 800, 
+              textTransform: "uppercase", 
+              background: "rgba(163, 230, 53, 0.1)", 
+              padding: "3px 8px", 
+              borderRadius: "6px",
+              letterSpacing: "0.05em",
+            }}>
+              Trial · {trialDaysLeft}d
             </span>
           )}
         </div>
 
         {/* Launches count */}
-        <div className="mb-2.5">
-          <span
-            style={{
-              fontSize: "16px",
-              fontWeight: 800,
-              color: isExhausted ? "#ef4444" : "var(--text-secondary)",
-              letterSpacing: "-0.01em",
-            }}
-          >
-            {launchesUsed} / {plan === "team" ? "∞" : launchesPerMonth}
+        <div style={{ marginBottom: "12px" }}>
+          <span style={{
+            fontSize: "22px",
+            fontWeight: 800,
+            color: isExhausted ? "#ef4444" : "var(--text-secondary)",
+            letterSpacing: "-0.02em",
+            fontFamily: "var(--font-heading)",
+          }}>
+            {launchesRemaining}
           </span>
-          <span style={{ fontSize: "12px", color: "var(--text-muted)", fontWeight: 500, marginLeft: "6px" }}>
-            Launches
+          <span style={{ 
+            fontSize: "13px", 
+            color: "var(--text-muted)", 
+            fontWeight: 500, 
+            marginLeft: "4px" 
+          }}>
+            / {plan === "team" ? "∞" : launchesPerMonth}
           </span>
+          <div style={{ 
+            fontSize: "11px", 
+            color: "var(--text-muted)", 
+            fontWeight: 500, 
+            marginTop: "2px" 
+          }}>
+            launches remaining
+          </div>
         </div>
 
         {/* Progress bar */}
         {plan !== "team" && (
           <div
-            className="w-full rounded-full overflow-hidden"
             style={{
-              height: "5px",
+              width: "100%",
+              height: "6px",
+              borderRadius: "3px",
               background: "rgba(255, 255, 255, 0.06)",
+              overflow: "hidden",
             }}
           >
             <div
-              className="h-full rounded-full transition-all duration-700 ease-out"
               style={{
+                height: "100%",
                 width: `${progressPercent}%`,
+                borderRadius: "3px",
                 background: isExhausted
                   ? "#ef4444"
                   : showWarning
                     ? "#f59e0b"
                     : "var(--accent-lime)",
-                boxShadow: isExhausted ? "none" : "0 0 6px rgba(163, 230, 53, 0.3)",
+                boxShadow: isExhausted 
+                  ? "0 0 8px rgba(239, 68, 68, 0.4)" 
+                  : "0 0 8px rgba(163, 230, 53, 0.3)",
+                transition: "width 0.7s ease-out",
               }}
             />
           </div>
