@@ -152,7 +152,12 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
         })}
       </nav>
 
-
+      {/* Quota Display — bottom of sidebar */}
+      {sidebarOpen && (
+        <div className="mt-auto">
+          <QuotaDisplay />
+        </div>
+      )}
 
     </div>
   );
