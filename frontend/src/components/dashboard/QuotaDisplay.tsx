@@ -76,11 +76,11 @@ export default function QuotaDisplay() {
         style={{
           borderRadius: "16px",
           padding: "18px 16px",
-          background: "linear-gradient(135deg, rgba(163, 230, 53, 0.04) 0%, rgba(255, 255, 255, 0.02) 100%)",
+          background: "var(--bg-card-glass, rgba(255, 255, 255, 0.95))",
           border: isExhausted 
-            ? "1px solid rgba(239, 68, 68, 0.25)" 
-            : "1px solid rgba(163, 230, 53, 0.12)",
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            ? "1px solid rgba(239, 68, 68, 0.3)" 
+            : "1px solid var(--border-subtle)",
+          boxShadow: "var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08))",
         }}
       >
         {/* Plan badge + Upgrade */}
@@ -174,7 +174,7 @@ export default function QuotaDisplay() {
               width: "100%",
               height: "6px",
               borderRadius: "3px",
-              background: "rgba(255, 255, 255, 0.06)",
+              background: "var(--bg-surface-hover, rgba(0, 0, 0, 0.06))",
               overflow: "hidden",
             }}
           >
@@ -187,10 +187,10 @@ export default function QuotaDisplay() {
                   ? "#ef4444"
                   : showWarning
                     ? "#f59e0b"
-                    : "var(--accent-lime)",
+                    : "#65a30d",
                 boxShadow: isExhausted 
                   ? "0 0 8px rgba(239, 68, 68, 0.4)" 
-                  : "0 0 8px rgba(163, 230, 53, 0.3)",
+                  : "0 0 6px rgba(101, 163, 13, 0.4)",
                 transition: "width 0.7s ease-out",
               }}
             />
