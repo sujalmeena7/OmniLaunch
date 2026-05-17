@@ -15,7 +15,6 @@ import { useThemeStore } from "@/stores/themeStore";
 import { useEscapeHandler } from "@/lib/useKeyboardShortcuts";
 import { motion, AnimatePresence } from "framer-motion";
 import QuotaDisplay from "@/components/dashboard/QuotaDisplay";
-import { Tooltip } from "@/components/ui/Tooltip";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -97,23 +96,23 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
           const Icon = item.icon;
 
           return (
-            <Tooltip key={item.href} content={item.label} position="right" delay={sidebarOpen ? 99999 : 300}>
-              <motion.button
-                onClick={() => handleNav(item.href)}
-                whileHover={{ x: sidebarOpen ? 4 : 0 }}
-                className="group w-full flex items-center relative"
-                style={{
-                  height: "48px",
-                  padding: sidebarOpen ? "0 16px" : "0",
-                  justifyContent: sidebarOpen ? "flex-start" : "center",
-                  borderRadius: "14px",
-                  background: isActive ? "var(--bg-elevated)" : "transparent",
-                  border: isActive ? "1px solid var(--border-strong)" : "1px solid transparent",
-                  cursor: "pointer",
-                  transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
-                  boxShadow: isActive ? "var(--shadow-md)" : "none"
-                }}
-              >
+            <motion.button
+              key={item.href}
+              onClick={() => handleNav(item.href)}
+              whileHover={{ x: sidebarOpen ? 4 : 0 }}
+              className="group w-full flex items-center relative"
+              style={{
+                height: "48px",
+                padding: sidebarOpen ? "0 16px" : "0",
+                justifyContent: sidebarOpen ? "flex-start" : "center",
+                borderRadius: "14px",
+                background: isActive ? "var(--bg-elevated)" : "transparent",
+                border: isActive ? "1px solid var(--border-strong)" : "1px solid transparent",
+                cursor: "pointer",
+                transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+                boxShadow: isActive ? "var(--shadow-md)" : "none"
+              }}
+            >
               {isActive && (
                 <motion.div
                   layoutId="nav-active-pill"
@@ -149,7 +148,6 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
                 </span>
               ) : null}
             </motion.button>
-            </Tooltip>
           );
         })}
       </nav>
