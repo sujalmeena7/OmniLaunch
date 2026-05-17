@@ -1,10 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Zap, AlertTriangle, ArrowUpRight, Clock } from "lucide-react";
-import { api } from "@/lib/api";
 import { useAppStore } from "@/stores/appStore";
-import type { Subscription } from "@/types";
 
 /**
  * Calculates the number of days remaining in a trial period.
@@ -34,21 +31,8 @@ export function shouldShowQuotaWarning(plan: "free" | "pro" | "team", launchesRe
 
 export default function QuotaDisplay() {
   const { user } = useAppStore();
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    api
-      .requestWithRetry<Subscription>("/billing/subscription")
-      .then((data) => setSubscription(data))
-      .catch(() => {
-        // If subscription fetch fails, we'll use profile data as fallback
-        setSubscription(null);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
+  if (!user) {
     return (
       <div className="px-4 py-3">
         <div className="h-16 rounded-xl animate-pulse" style={{ background: "var(--bg-elevated)" }} />
@@ -56,12 +40,10 @@ export default function QuotaDisplay() {
     );
   }
 
-  // Use subscription data if available, otherwise fall back to user profile
-  const plan = subscription?.plan ?? user?.plan ?? "free";
-  const launchesPerMonth = subscription?.launches_per_month ?? user?.launches_per_month ?? 3;
-  const launchesRemaining = user?.launches_remaining ?? 0;
-
-  // During trial, launches_remaining can exceed launches_per_month — use the higher value as max
+  // Single source of truth: user profile
+  const plan = user.plan ?? "free";
+  const launchesPerMonth = user.launches_per_month ?? 3;
+  const launchesRemaining = user.launches_remaining ?? 0;
   const effectiveMax = Math.max(launchesPerMonth, launchesRemaining);
   const launchesUsed = Math.max(0, effectiveMax - launchesRemaining);
 
@@ -70,7 +52,7 @@ export default function QuotaDisplay() {
   const progressPercent = effectiveMax > 0 ? Math.min(100, (launchesUsed / effectiveMax) * 100) : 0;
 
   // Trial info
-  const trialDaysLeft = user?.is_trial ? calculateTrialDaysRemaining(user.trial_ends_at) : null;
+  const trialDaysLeft = user.is_trial ? calculateTrialDaysRemaining(user.trial_ends_at) : null;
   const isInTrial = trialDaysLeft !== null && trialDaysLeft > 0;
 
   return (
