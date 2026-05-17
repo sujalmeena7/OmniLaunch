@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'backend/**'
+      - 'deploy/**'
       - '.github/workflows/deploy-backend.yml'
 
 jobs:
@@ -23,5 +24,6 @@ jobs:
           script: |
             cd /home/ec2-user/OmniLaunch
             git pull origin main
-            docker-compose up -d --build backend
-            echo "Backend deployed successfully!"
+            cd deploy
+            docker-compose -f docker-compose.prod.yml up -d --build
+            echo "Backend + Celery worker deployed successfully!"
