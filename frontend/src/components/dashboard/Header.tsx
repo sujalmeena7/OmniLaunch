@@ -92,10 +92,9 @@ export default function Header() {
   return (
     <>
       <header
-        className="flex items-center justify-between flex-shrink-0 relative z-50"
+        className="flex items-center justify-between flex-shrink-0 relative z-50 px-4 md:px-10 lg:px-12"
         style={{
           height: "80px",
-          padding: "0 16px",
           borderBottom: "1px solid var(--border-subtle)",
           background: "var(--bg-header-glass)",
           backdropFilter: "blur(20px)",
