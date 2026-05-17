@@ -143,7 +143,7 @@ export default function VoiceLabPage() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px", marginTop: "8px" }}>
+      <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "32px", marginTop: "8px" }}>
         {/* Left: Training Form */}
         <div>
           <form onSubmit={handleTrain} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -275,7 +275,7 @@ export default function VoiceLabPage() {
 
         {/* Right: Existing Profiles + Manifesto */}
         <div>
-          <h2 style={{ fontSize: "11px", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: "-48px", marginBottom: "12px", fontFamily: "var(--font-heading)" }}>Your Voice Profiles</h2>
+          <h2 style={{ fontSize: "11px", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "12px", fontFamily: "var(--font-heading)" }}>Your Voice Profiles</h2>
 
           {loading ? (
             <div className="flex flex-col gap-4">
@@ -388,7 +388,7 @@ export default function VoiceLabPage() {
                             <span style={{ fontSize: "12px", fontWeight: 700, color: "#4d7c0f", textTransform: "uppercase", letterSpacing: "0.05em" }}>Tone Manifesto</span>
                           </div>
 
-                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                          <div className="grid grid-cols-2" style={{ gap: "16px" }}>
                             {[
                               { label: "Structure", value: profile.tone_manifesto.sentence_structure, icon: <Activity size={12} /> },
                               { label: "Formality", value: `${Math.round(profile.tone_manifesto.formality * 100)}%`, icon: <CheckCircle2 size={12} /> },
