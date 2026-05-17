@@ -203,9 +203,9 @@ export default function Hero() {
 
   return (
     <section
+      className="lg:min-h-screen"
       style={{
         position: "relative",
-        minHeight: "100vh",
         paddingTop: "64px",
         fontFamily: "var(--font-sans)",
         background: "transparent",
@@ -215,7 +215,7 @@ export default function Hero() {
       {/* Main hero content */}
       <div
         className="grid grid-cols-1 lg:grid-cols-2 items-center"
-        style={{ maxWidth: "1200px", margin: "0 auto", padding: "60px 24px 80px 24px", gap: "48px" }}
+        style={{ maxWidth: "1200px", margin: "0 auto", padding: "40px 20px 60px 20px", gap: "48px" }}
       >
         {/* Left column */}
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -284,6 +284,7 @@ export default function Hero() {
             style={{
               gap: "0",
               marginTop: "4px",
+              width: "100%",
               maxWidth: "440px",
               borderRadius: "10px",
               border: "1px solid rgba(0,0,0,0.06)",
@@ -296,6 +297,7 @@ export default function Hero() {
               placeholder="What's your email?"
               style={{
                 flex: 1,
+                minWidth: 0,
                 height: "44px",
                 padding: "0 14px",
                 background: "transparent",
@@ -311,7 +313,7 @@ export default function Hero() {
               onClick={() => router.push("/signup")}
               style={{
                 height: "44px",
-                padding: "0 20px",
+                padding: "0 16px",
                 borderRadius: "8px",
                 border: "none",
                 background: "#D4F542",
