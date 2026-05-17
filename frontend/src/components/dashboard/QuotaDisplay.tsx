@@ -75,7 +75,7 @@ export default function QuotaDisplay() {
       <div
         style={{
           borderRadius: "16px",
-          padding: "18px 16px",
+          padding: "20px 18px",
           background: "var(--bg-card-glass, rgba(255, 255, 255, 0.95))",
           border: isExhausted 
             ? "1px solid rgba(239, 68, 68, 0.3)" 
@@ -84,7 +84,7 @@ export default function QuotaDisplay() {
         }}
       >
         {/* Plan badge + Upgrade */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "16px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <div style={{ 
               width: "6px", 
@@ -103,43 +103,47 @@ export default function QuotaDisplay() {
               {plan.toUpperCase()} PLAN
             </span>
           </div>
-          {plan === "free" && (
-            <a
-              href="/dashboard/subscription"
-              style={{
-                fontSize: "10px",
-                fontWeight: 800,
-                color: "var(--accent-lime)",
-                textDecoration: "none",
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                padding: "3px 8px",
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", marginLeft: "auto" }}>
+            {plan === "free" && (
+              <a
+                href="/dashboard/subscription"
+                style={{
+                  fontSize: "10px",
+                  fontWeight: 800,
+                  color: "var(--accent-lime)",
+                  textDecoration: "none",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  padding: "4px 10px",
+                  borderRadius: "6px",
+                  background: "rgba(163, 230, 53, 0.08)",
+                  transition: "all 0.2s ease",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Upgrade
+              </a>
+            )}
+            {isInTrial && (
+              <span style={{ 
+                fontSize: "9px", 
+                color: "var(--accent-lime)", 
+                fontWeight: 800, 
+                textTransform: "uppercase", 
+                background: "rgba(163, 230, 53, 0.1)", 
+                padding: "4px 10px", 
                 borderRadius: "6px",
-                background: "rgba(163, 230, 53, 0.08)",
-                transition: "all 0.2s ease",
-              }}
-            >
-              Upgrade
-            </a>
-          )}
-          {isInTrial && (
-            <span style={{ 
-              fontSize: "9px", 
-              color: "var(--accent-lime)", 
-              fontWeight: 800, 
-              textTransform: "uppercase", 
-              background: "rgba(163, 230, 53, 0.1)", 
-              padding: "3px 8px", 
-              borderRadius: "6px",
-              letterSpacing: "0.05em",
-            }}>
-              Trial · {trialDaysLeft}d
-            </span>
-          )}
+                letterSpacing: "0.05em",
+                whiteSpace: "nowrap",
+              }}>
+                Trial · {trialDaysLeft}d
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Launches count */}
-        <div style={{ marginBottom: "12px" }}>
+        <div style={{ marginBottom: "14px" }}>
           <span style={{
             fontSize: "22px",
             fontWeight: 800,
