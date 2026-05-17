@@ -64,6 +64,7 @@ def generate_bundle_task(self, bundle_id: str, request_data: dict):
     import asyncio
     from datetime import datetime, timezone
     from app.agents.graph import run_langgraph_pipeline
+    from app.services.platform_service import validate_post_against_rules
 
     voice_profile_id = request_data.get("voice_profile_id", "")
     product = request_data.get("product", {})
@@ -122,6 +123,39 @@ def generate_bundle_task(self, bundle_id: str, request_data: dict):
                 generated_posts.append(post_data)
                 continue
 
+            # Run platform validation on the generated post
+            platform_rules = {
+                "platform": platform,
+                "sub_target": sub_target,
+                "max_title_length": None,
+                "max_body_length": None,
+                "prefix": None,
+                "forbidden_words": [],
+                "required_elements": [],
+                "formatting_rules": {},
+            }
+
+            # Fetch actual platform rules from DB for validation
+            try:
+                rules_query = sb.table("platform_rules").select("*").eq("platform", platform)
+                if sub_target:
+                    rules_query = rules_query.eq("sub_target", sub_target)
+                else:
+                    rules_query = rules_query.is_("sub_target", "null")
+                rules_result = rules_query.maybe_single().execute()
+                if rules_result and rules_result.data:
+                    platform_rules.update(rules_result.data)
+            except Exception:
+                pass  # Use defaults if fetch fails
+
+            rule_checks = validate_post_against_rules(
+                platform_rules,
+                post_data.get("title", ""),
+                post_data.get("body", ""),
+            )
+            rule_pass_count = sum(1 for c in rule_checks if c["status"] == "pass")
+            rule_total_count = len(rule_checks)
+
             post_record = sb.table("generated_posts").insert({
                 "bundle_id": bundle_id,
                 "platform": platform,
@@ -129,9 +163,9 @@ def generate_bundle_task(self, bundle_id: str, request_data: dict):
                 "title": post_data.get("title", ""),
                 "body": post_data.get("body"),
                 "voice_match_score": post_data.get("voice_match_score", 0),
-                "rule_violations": post_data.get("rule_checks", []),
-                "rule_pass_count": post_data.get("rule_pass_count", 0),
-                "rule_total_count": post_data.get("rule_total_count", 0),
+                "rule_violations": rule_checks,
+                "rule_pass_count": rule_pass_count,
+                "rule_total_count": rule_total_count,
                 "ai_isms_removed": post_data.get("ai_isms_removed", []),
                 "revision": post_data.get("revision", 1),
             }).execute()
