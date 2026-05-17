@@ -106,7 +106,7 @@ export default function SignupPage() {
         </div>
 
         {/* Social Login Buttons */}
-        <div className="grid grid-cols-3" style={{ gap: "12px", marginBottom: "16px" }}>
+        <div className="grid grid-cols-2" style={{ gap: "12px", marginBottom: "16px" }}>
           <button
             type="button"
             onClick={() => handleOAuth("google")}
@@ -136,33 +136,6 @@ export default function SignupPage() {
               <path fill="#EA4335" d="M12 4.81c1.765 0 3.345.61 4.59 1.8l3.435-3.435C17.94 1.19 15.24 0 12 0 7.425 0 3.39 2.5 1.41 6.745l4.035 3.13c.93-2.755 3.51-4.81 12-4.81z" />
             </svg>
             Google
-          </button>
-          <button
-            type="button"
-            onClick={() => handleOAuth("apple")}
-            style={{
-              height: "44px",
-              borderRadius: "10px",
-              border: "1px solid #e5e7eb",
-              background: "#ffffff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              cursor: "pointer",
-              fontSize: "13px",
-              fontWeight: 500,
-              color: "#374151",
-              fontFamily: "var(--font-sans)",
-              transition: "all 0.15s ease",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#f9fafb"; e.currentTarget.style.borderColor = "#d1d5db"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#ffffff"; e.currentTarget.style.borderColor = "#e5e7eb"; }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="#000000">
-              <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.51 12.09 1.011 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.404-2.427 1.248-3.83-1.208.052-2.677.805-3.535 1.804-.78.895-1.454 2.336-1.273 3.712 1.338.104 2.715-.688 3.559-1.687z" />
-            </svg>
-            Apple
           </button>
           <button
             type="button"
