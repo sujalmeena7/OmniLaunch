@@ -68,6 +68,10 @@
   --color-notification: #ff4d4d;
   --shadow-notification: 0 0 8px #ff4d4d;
 
+  /* Tooltip */
+  --bg-tooltip: #1e293b;
+  --text-tooltip: #f1f5f9;
+
   /* Typefully Design System Tokens — Updated for Lite Theme */
   --bg-app: #e0e7ff;
   --bg-sidebar: #ffffff;
@@ -311,6 +315,10 @@ body {
   --color-notification: #ff4d4d;
   --shadow-notification: 0 0 8px #ff4d4d;
 
+  /* Tooltip */
+  --bg-tooltip: #f8fafc;
+  --text-tooltip: #0f172a;
+
   /* Gradients */
   --gradient-surface: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
   --gradient-glow: radial-gradient(ellipse at 50% 0%, rgba(92, 124, 250, 0.2) 0%, transparent 60%);
@@ -354,4 +362,47 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ── Professional Polish Utilities ───────────────────────────── */
+
+/* Button press feedback — subtle scale on active */
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Smooth transitions for all interactive elements */
+button,
+a,
+input,
+select,
+textarea {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus ring that doesn't show on mouse click */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Consistent card hover lift */
+.card-hover {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
 }

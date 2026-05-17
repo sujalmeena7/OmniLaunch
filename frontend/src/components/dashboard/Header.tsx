@@ -8,6 +8,7 @@ import { useThemeStore } from "@/stores/themeStore";
 import CommandPalette from "./CommandPalette";
 import { motion, AnimatePresence } from "framer-motion";
 import { api } from "@/lib/api";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "Statistics",
@@ -203,59 +204,63 @@ export default function Header() {
           </button>
 
           {/* Theme Toggle — hidden on mobile */}
-          <button
-            onClick={toggleTheme}
-            className="hidden md:flex items-center justify-center"
-            style={{
-              width: "44px",
-              height: "44px",
-              borderRadius: "14px",
-              background: "var(--bg-input-tint)",
-              border: "1px solid var(--border-subtle)",
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--bg-input-tint-hover)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "var(--bg-input-tint)"; }}
-            aria-label="Toggle dark mode"
-          >
-            {theme === "dark" ? (
-              <Moon size={18} style={{ color: "var(--text-secondary)" }} />
-            ) : (
-              <Sun size={18} style={{ color: "var(--text-secondary)" }} />
-            )}
-          </button>
+          <Tooltip content={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"} position="bottom">
+            <button
+              onClick={toggleTheme}
+              className="hidden md:flex items-center justify-center"
+              style={{
+                width: "44px",
+                height: "44px",
+                borderRadius: "14px",
+                background: "var(--bg-input-tint)",
+                border: "1px solid var(--border-subtle)",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "var(--bg-input-tint-hover)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "var(--bg-input-tint)"; }}
+              aria-label="Toggle dark mode"
+            >
+              {theme === "dark" ? (
+                <Moon size={18} style={{ color: "var(--text-secondary)" }} />
+              ) : (
+                <Sun size={18} style={{ color: "var(--text-secondary)" }} />
+              )}
+            </button>
+          </Tooltip>
 
           {/* Notification bell — hidden on mobile */}
-          <button
-            className="hidden md:flex items-center justify-center"
-            style={{
-              width: "44px",
-              height: "44px",
-              borderRadius: "14px",
-              background: "var(--bg-input-tint)",
-              border: "1px solid var(--border-subtle)",
-              cursor: "pointer",
-              position: "relative",
-              transition: "all 0.2s ease",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--bg-input-tint-hover)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "var(--bg-input-tint)"; }}
-          >
-            <Bell size={18} style={{ color: "var(--text-secondary)" }} />
-            <div
+          <Tooltip content="Notifications" position="bottom">
+            <button
+              className="hidden md:flex items-center justify-center"
               style={{
-                position: "absolute",
-                top: "12px",
-                right: "12px",
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: "var(--color-notification)",
-                boxShadow: "var(--shadow-notification)",
+                width: "44px",
+                height: "44px",
+                borderRadius: "14px",
+                background: "var(--bg-input-tint)",
+                border: "1px solid var(--border-subtle)",
+                cursor: "pointer",
+                position: "relative",
+                transition: "all 0.2s ease",
               }}
-            />
-          </button>
+              onMouseEnter={(e) => { e.currentTarget.style.background = "var(--bg-input-tint-hover)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "var(--bg-input-tint)"; }}
+            >
+              <Bell size={18} style={{ color: "var(--text-secondary)" }} />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "12px",
+                  right: "12px",
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
+                  background: "var(--color-notification)",
+                  boxShadow: "var(--shadow-notification)",
+                }}
+              />
+            </button>
+          </Tooltip>
 
           {/* User Profile Dropdown */}
           <div className="relative" ref={profileRef}>
