@@ -7,6 +7,7 @@ import { useAppStore } from "@/stores/appStore";
 import type { UserProfile } from "@/types";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Rocket } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,6 +30,21 @@ export default function LoginPage() {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleOAuth = async (provider: "google" | "github" | "apple") => {
+    const redirectTo = typeof window !== "undefined"
+      ? `${window.location.origin}/auth/callback`
+      : "/auth/callback";
+
+    const { error: oauthError } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo },
+    });
+
+    if (oauthError) {
+      setError(oauthError.message);
     }
   };
 
@@ -89,6 +105,7 @@ export default function LoginPage() {
         <div className="grid grid-cols-3" style={{ gap: "12px", marginBottom: "16px" }}>
           <button
             type="button"
+            onClick={() => handleOAuth("google")}
             style={{
               height: "44px",
               borderRadius: "10px",
@@ -118,6 +135,7 @@ export default function LoginPage() {
           </button>
           <button
             type="button"
+            onClick={() => handleOAuth("apple")}
             style={{
               height: "44px",
               borderRadius: "10px",
@@ -144,6 +162,7 @@ export default function LoginPage() {
           </button>
           <button
             type="button"
+            onClick={() => handleOAuth("github")}
             style={{
               height: "44px",
               borderRadius: "10px",
