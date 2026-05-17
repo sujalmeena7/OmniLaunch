@@ -2,20 +2,20 @@ version: "3.8"
 
 services:
   backend:
-    build: ./backend
+    build: ../backend
     ports:
       - "8000:8000"
     env_file:
-      - ./backend/.env
+      - ../backend/.env
     depends_on:
       - redis
     restart: always
 
   celery-worker:
-    build: ./backend
+    build: ../backend
     command: celery -A app.agents.tasks.celery_app worker --loglevel=info --concurrency=2
     env_file:
-      - ./backend/.env
+      - ../backend/.env
     depends_on:
       - redis
     restart: always
