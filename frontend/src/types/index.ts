@@ -131,4 +131,6 @@ export const PLATFORM_META: Record<string, { label: string; icon: string; color:
   reddit: { label: "Reddit", icon: "🔴", color: "#ff4500" },
   indiehackers: { label: "IndieHackers", icon: "💼", color: "#0e6db4" },
   twitter: { label: "Twitter / X", icon: "🐦", color: "#1da1f2" },
+  linkedin: { label: "LinkedIn", icon: "💼", color: "#0a66c2" },
+  devto: { label: "Dev.to", icon: "⌨️", color: "#0a0a0a" },
 };

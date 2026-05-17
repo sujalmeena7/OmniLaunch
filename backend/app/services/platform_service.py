@@ -153,6 +153,178 @@ def validate_post_against_rules(
                 "detail": f"Tagline: {len(title)}/{tagline_max} characters (over limit)",
             })
 
+    # ── Platform-specific validations ─────────────────────────
+    platform = rules.get("platform", "")
+    sub_target = rules.get("sub_target", "") or ""
+
+    # LinkedIn-specific validations
+    if platform == "linkedin":
+        # Body length warning
+        if body and len(body) > 3000:
+            checks.append({
+                "rule": "body_length",
+                "status": "warning",
+                "detail": f"Body is {len(body)} characters — LinkedIn truncates posts over 3000 chars",
+            })
+
+        # Hook line check — first line should be short and punchy
+        if body:
+            first_line = body.split("\n")[0].strip()
+            word_count = len(first_line.split())
+            if word_count > 12:
+                checks.append({
+                    "rule": "hook_line",
+                    "status": "warning",
+                    "detail": f"First line is {word_count} words — LinkedIn hooks work best under 12 words",
+                })
+            else:
+                checks.append({
+                    "rule": "hook_line",
+                    "status": "pass",
+                    "detail": f"Hook line is {word_count} words — punchy and effective",
+                })
+
+        # Hashtag count
+        if body:
+            hashtags = re.findall(r"#\w+", body)
+            if len(hashtags) > 5:
+                checks.append({
+                    "rule": "hashtags",
+                    "status": "warning",
+                    "detail": f"Found {len(hashtags)} hashtags — LinkedIn recommends 3-5 max",
+                })
+            elif hashtags:
+                checks.append({
+                    "rule": "hashtags",
+                    "status": "pass",
+                    "detail": f"{len(hashtags)} hashtags used",
+                })
+
+        # Link in body detection
+        if body:
+            url_pattern = re.compile(r"https?://[^\s]+")
+            if url_pattern.search(body):
+                checks.append({
+                    "rule": "link_in_body",
+                    "status": "warning",
+                    "detail": "LinkedIn suppresses posts with links — put your link in the first comment instead",
+                })
+            else:
+                checks.append({
+                    "rule": "link_in_body",
+                    "status": "pass",
+                    "detail": "No links in body — good for LinkedIn reach",
+                })
+
+    # Dev.to-specific validations
+    if platform == "devto":
+        # Title length
+        if title and len(title) > 100:
+            checks.append({
+                "rule": "title_length",
+                "status": "fail",
+                "detail": f"Title is {len(title)} characters — Dev.to limit is 100",
+            })
+
+        # Code block detection
+        if body:
+            has_code_block = "```" in body or "    " in body
+            if not has_code_block:
+                checks.append({
+                    "rule": "code_block",
+                    "status": "warning",
+                    "detail": "Dev.to posts perform better with at least one code snippet",
+                })
+            else:
+                checks.append({
+                    "rule": "code_block",
+                    "status": "pass",
+                    "detail": "Code block detected",
+                })
+
+        # Tags check (via required_elements)
+        required_elems = rules.get("required_elements", [])
+        if "tags" in required_elems:
+            checks.append({
+                "rule": "tags",
+                "status": "warning",
+                "detail": "Remember to add tags when publishing (showdev, buildinpublic recommended)",
+            })
+
+        # Markdown headers
+        if body:
+            has_headers = "## " in body or "# " in body
+            if not has_headers:
+                checks.append({
+                    "rule": "markdown_headers",
+                    "status": "info",
+                    "detail": "Consider adding section headers for readability",
+                })
+            else:
+                checks.append({
+                    "rule": "markdown_headers",
+                    "status": "pass",
+                    "detail": "Markdown headers detected — good structure",
+                })
+
+    # r/sideprojects-specific validations
+    if platform == "reddit" and sub_target == "r/sideprojects":
+        # Title length
+        if title and len(title) > 300:
+            checks.append({
+                "rule": "title_length",
+                "status": "fail",
+                "detail": f"Title is {len(title)} characters — Reddit limit is 300",
+            })
+
+        # Link in body
+        if body:
+            url_pattern = re.compile(r"https?://[^\s]+")
+            if url_pattern.search(body):
+                checks.append({
+                    "rule": "link_in_body",
+                    "status": "warning",
+                    "detail": "r/sideprojects automod removes posts with links in body — put your link in comments",
+                })
+            else:
+                checks.append({
+                    "rule": "link_in_body",
+                    "status": "pass",
+                    "detail": "No links in body — safe from automod",
+                })
+
+        # Bullet points detection
+        if body:
+            has_bullets = bool(re.search(r"^[\s]*[-•*]\s", body, re.MULTILINE))
+            if has_bullets:
+                checks.append({
+                    "rule": "bullet_points",
+                    "status": "warning",
+                    "detail": "Casual prose performs better than bullet points on r/sideprojects",
+                })
+            else:
+                checks.append({
+                    "rule": "bullet_points",
+                    "status": "pass",
+                    "detail": "Conversational style — good fit for r/sideprojects",
+                })
+
+        # Word count
+        if body:
+            word_count = len(body.split())
+            if word_count > 200:
+                checks.append({
+                    "rule": "word_count",
+                    "status": "warning",
+                    "detail": f"Body is {word_count} words — keep it under 200 words for r/sideprojects",
+                })
+            else:
+                checks.append({
+                    "rule": "word_count",
+                    "status": "pass",
+                    "detail": f"{word_count} words — concise and on target",
+                })
+
     return checks
 
 
