@@ -73,7 +73,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <main
           style={{ flex: 1, overflow: "auto" }}
         >
-          <div style={{ padding: "16px 48px 32px 48px" }}>
+          <div style={{ padding: "32px 48px 32px 48px" }}>
             <PageErrorBoundary>
               <PageTransition>
                 {children}
