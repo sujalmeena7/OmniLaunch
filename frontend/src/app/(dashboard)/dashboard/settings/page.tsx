@@ -55,9 +55,12 @@ export default function SettingsPage() {
   }, [fetchSubscription, fetchBillingHistory]);
 
   const handleLogout = () => {
-    logout();
     api.clearToken();
-    router.push("/login");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("omnilaunch_token");
+      localStorage.removeItem("omnilaunch_refresh");
+      window.location.href = "/";
+    }
   };
 
   // Handle cancel subscription
@@ -201,7 +204,7 @@ export default function SettingsPage() {
               <p style={{ color: "var(--text-muted)", marginBottom: "40px", lineHeight: 1.6 }}>
                 Are you sure? Your benefits will continue until <span style={{ color: "var(--text-secondary)", fontWeight: 700 }}>{subscription?.current_period_end ? new Date(subscription.current_period_end).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "the end of your billing period"}</span>.
               </p>
-              <div style={{ display: "flex", gap: "16px" }}>
+              <div className="flex flex-col sm:flex-row" style={{ gap: "16px" }}>
                 <button
                   onClick={handleCancelSubscription}
                   disabled={cancelLoading}
