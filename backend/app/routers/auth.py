@@ -130,16 +130,46 @@ async def refresh_token(request: Request):
 async def get_me(user: dict = Depends(get_current_user)):
     """Get the current user's profile.
 
+    Auto-creates a profile for OAuth users who don't have one yet.
     Also checks if the user's trial has expired and resets to Free plan if so.
     """
     user_id = user["id"]
+    user_email = user.get("email", "")
+
+    sb = get_supabase_client()
+    result = sb.table("profiles").select("*").eq("id", user_id).maybe_single().execute()
+
+    if not result or not result.data:
+        # Auto-create profile for OAuth users (Google/GitHub sign-in)
+        display_name = user_email.split("@")[0] if user_email else "User"
+        sb.table("profiles").insert({
+            "id": user_id,
+            "email": user_email,
+            "display_name": display_name,
+            "plan": "free",
+            "launches_remaining": 3,
+        }).execute()
+
+        # Create default free subscription
+        sb.table("subscriptions").insert({
+            "user_id": user_id,
+            "plan": "free",
+            "status": "active",
+            "launches_per_month": 3,
+        }).execute()
+
+        # Assign trial
+        assign_trial(user_id)
+
+        # Re-fetch the created profile
+        result = sb.table("profiles").select("*").eq("id", user_id).single().execute()
+        if not result.data:
+            raise HTTPException(status_code=500, detail="Failed to create profile")
 
     # Check trial expiry and reset to Free plan if expired
     if check_trial_expiry(user_id):
         expire_trial(user_id)
+        # Re-fetch after expiry update
+        result = sb.table("profiles").select("*").eq("id", user_id).single().execute()
 
-    sb = get_supabase_client()
-    result = sb.table("profiles").select("*").eq("id", user_id).single().execute()
-    if not result.data:
-        raise HTTPException(status_code=404, detail="Profile not found")
     return UserProfile(**result.data)
