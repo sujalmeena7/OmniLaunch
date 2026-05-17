@@ -27,7 +27,15 @@ export default function LoginPage() {
       setUser(data.user as unknown as UserProfile);
       router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      const msg = err instanceof Error ? err.message : "Login failed";
+      // Make Supabase error messages user-friendly
+      if (msg.includes("Invalid login credentials") || msg.includes("invalid_credentials")) {
+        setError("No account found with these credentials. Check your email and password, or sign up for a new account.");
+      } else if (msg.includes("Email not confirmed")) {
+        setError("Please verify your email address before logging in.");
+      } else {
+        setError(msg);
+      }
     } finally {
       setLoading(false);
     }

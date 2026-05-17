@@ -20,11 +20,23 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
+        // Check for error in URL query params (Supabase redirects with ?error=... on failure)
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlError = urlParams.get("error_description") || urlParams.get("error");
+        if (urlError) {
+          const friendlyMsg = urlError.includes("Multiple accounts")
+            ? "This email is already linked to another sign-in method. Try logging in with Google or email instead."
+            : urlError.replace(/\+/g, " ");
+          setError(friendlyMsg);
+          setTimeout(() => router.push("/login"), 3000);
+          return;
+        }
+
         // Supabase automatically picks up the session from the URL hash
         const { data, error: authError } = await supabase.auth.getSession();
 
         if (authError || !data.session) {
-          setError(authError?.message || "Authentication failed");
+          setError(authError?.message || "Authentication failed. Please try again.");
           setTimeout(() => router.push("/login"), 2000);
           return;
         }
