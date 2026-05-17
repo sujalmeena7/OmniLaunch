@@ -6,11 +6,10 @@ Uses Redis pub/sub to receive events from the Celery worker.
 
 import asyncio
 import json
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
-from app.routers.auth import get_current_user
-from app.db.supabase_client import get_supabase_client
+from app.db.supabase_client import get_supabase_client, get_supabase_public_client
 from app.config import get_settings
 
 router = APIRouter()
@@ -96,13 +95,30 @@ async def _event_generator(bundle_id: str, user_id: str):
 
 
 @router.get("/bundles/{bundle_id}/status")
-async def bundle_status_stream(bundle_id: str, user: dict = Depends(get_current_user)):
+async def bundle_status_stream(bundle_id: str, token: str | None = None):
     """
     SSE endpoint for real-time bundle generation progress.
+
+    Auth via ?token= query param (EventSource can't set headers).
 
     Events are JSON objects with: {platform, status, detail}
     Status values: connected, researching, drafting, humanizing, complete, failed, stream_end
     """
+    if not token:
+        raise HTTPException(status_code=401, detail="Token required as query parameter")
+
+    # Validate token
+    try:
+        sb_pub = get_supabase_public_client()
+        user_response = sb_pub.auth.get_user(token)
+        if not user_response or not user_response.user:
+            raise HTTPException(status_code=401, detail="Invalid or expired token")
+        user = {"id": user_response.user.id, "email": user_response.user.email}
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=401, detail="Authentication failed")
+
     # Verify bundle belongs to user
     sb = get_supabase_client()
     bundle = sb.table("launch_bundles").select("user_id, status").eq("id", bundle_id).single().execute()

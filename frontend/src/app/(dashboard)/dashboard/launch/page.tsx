@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { api } from "@/lib/api";
 import { useAppStore } from "@/stores/appStore";
+import { useLaunchStore } from "@/stores/launchStore";
 import { useBundleSSE } from "@/lib/hooks/useBundleSSE";
 import ProductForm, { type ProductFormData } from "@/components/launch/ProductForm";
 import PlatformTabs from "@/components/launch/PlatformTabs";
@@ -26,12 +27,15 @@ export default function LaunchPage() {
     decrementLaunchesRemaining,
   } = useAppStore();
 
+  // Persist generation state across navigation
+  const launchStore = useLaunchStore();
+
   const [loading, setLoading] = useState(true);
-  const [generating, setGenerating] = useState(false);
-  const [bundleId, setBundleId] = useState<string | null>(null);
-  const [generatedPosts, setGeneratedPosts] = useState<GeneratedPost[]>([]);
+  const [generating, setGenerating] = useState(launchStore.generating);
+  const [bundleId, setBundleId] = useState<string | null>(launchStore.bundleId);
+  const [generatedPosts, setGeneratedPosts] = useState<GeneratedPost[]>(launchStore.generatedPosts);
   const [activeTab, setActiveTab] = useState(0);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(launchStore.error || "");
   const [usePollingFallback, setUsePollingFallback] = useState(false);
 
   // Mobile layout state
@@ -88,10 +92,12 @@ export default function LaunchPage() {
           };
           setGeneratedPosts(bundle.posts || []);
           setGenerating(false);
+          launchStore.completeGeneration(bundle.posts || []);
         })
         .catch(() => {
           setError("Failed to fetch completed bundle");
           setGenerating(false);
+          launchStore.failGeneration("Failed to fetch completed bundle");
         });
     }
   }, [sseComplete, bundleId]);
@@ -120,11 +126,13 @@ export default function LaunchPage() {
         if (bundle.status === "complete") {
           setGeneratedPosts(bundle.posts || []);
           setGenerating(false);
+          launchStore.completeGeneration(bundle.posts || []);
           return;
         }
         if (bundle.status === "failed") {
           setError("Generation failed. Please try again.");
           setGenerating(false);
+          launchStore.failGeneration("Generation failed. Please try again.");
           return;
         }
         if (attempts >= MAX_ATTEMPTS) {
@@ -176,6 +184,17 @@ export default function LaunchPage() {
       .finally(() => setLoading(false));
   }, [setVoiceProfiles, setPlatformRules]);
 
+  // Resume generation if user navigated away and came back while generating
+  useEffect(() => {
+    if (launchStore.generating && launchStore.bundleId && !generating) {
+      setGenerating(true);
+      setBundleId(launchStore.bundleId);
+      setUsePollingFallback(true);
+      pollBundle(launchStore.bundleId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleGenerate = useCallback(
     async (formData: ProductFormData) => {
       setGenerating(true);
@@ -201,16 +220,19 @@ export default function LaunchPage() {
         })) as { bundle_id: string; status: string };
 
         setBundleId(result.bundle_id);
+        launchStore.startGeneration(result.bundle_id);
         // Decrement launches_remaining in the store (backend already decremented server-side)
         decrementLaunchesRemaining();
         // SSE hook will automatically connect via the bundleId state change.
         // Polling is only used as fallback if SSE connection fails.
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Generation failed");
+        const errorMsg = err instanceof Error ? err.message : "Generation failed";
+        setError(errorMsg);
         setGenerating(false);
+        launchStore.failGeneration(errorMsg);
       }
     },
-    [decrementLaunchesRemaining]
+    [decrementLaunchesRemaining, launchStore]
   );
 
   const handleEdit = useCallback(
