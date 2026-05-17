@@ -60,11 +60,14 @@ export default function QuotaDisplay() {
   const plan = subscription?.plan ?? user?.plan ?? "free";
   const launchesPerMonth = subscription?.launches_per_month ?? user?.launches_per_month ?? 3;
   const launchesRemaining = user?.launches_remaining ?? 0;
-  const launchesUsed = Math.max(0, launchesPerMonth - launchesRemaining);
+
+  // During trial, launches_remaining can exceed launches_per_month — use the higher value as max
+  const effectiveMax = Math.max(launchesPerMonth, launchesRemaining);
+  const launchesUsed = Math.max(0, effectiveMax - launchesRemaining);
 
   const isExhausted = launchesRemaining <= 0;
   const showWarning = shouldShowQuotaWarning(plan, launchesRemaining);
-  const progressPercent = launchesPerMonth > 0 ? Math.min(100, (launchesUsed / launchesPerMonth) * 100) : 0;
+  const progressPercent = effectiveMax > 0 ? Math.min(100, (launchesUsed / effectiveMax) * 100) : 0;
 
   // Trial info
   const trialDaysLeft = user?.is_trial ? calculateTrialDaysRemaining(user.trial_ends_at) : null;
@@ -159,7 +162,7 @@ export default function QuotaDisplay() {
             fontWeight: 500, 
             marginLeft: "4px" 
           }}>
-            / {plan === "team" ? "∞" : launchesPerMonth}
+            / {plan === "team" ? "∞" : effectiveMax}
           </span>
           <div style={{ 
             fontSize: "11px", 
