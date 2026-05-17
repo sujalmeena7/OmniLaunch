@@ -11,9 +11,19 @@ services:
       - redis
     restart: always
 
+  celery-worker:
+    build: ./backend
+    command: celery -A app.agents.tasks.celery_app worker --loglevel=info --concurrency=2
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - redis
+    restart: always
+
   redis:
     image: redis:7-alpine
     restart: always
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
     volumes:
       - redis_data:/data
 
