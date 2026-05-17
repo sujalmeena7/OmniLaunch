@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { useAppStore } from "@/stores/appStore";
+import { useCachedQuery } from "@/hooks/useCachedQuery";
 import { motion } from "framer-motion";
 import {
   Download,
@@ -445,16 +446,15 @@ const containerVariants = {
 export default function DashboardHome() {
   const router = useRouter();
   const user = useAppStore((s) => s.user);
-  const [bundles, setBundles] = useState<BundleSummary[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    api
-      .listBundles()
-      .then((data) => setBundles((data.bundles || []) as unknown as BundleSummary[]))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+  // Use cached query — serves stale data instantly on re-navigation, revalidates in background
+  const { data: bundlesData, isLoading: loading } = useCachedQuery(
+    "dashboard-bundles",
+    () => api.listBundles().then((data) => (data.bundles || []) as unknown as BundleSummary[]),
+    { staleTime: 30_000, cacheTime: 300_000 }
+  );
+
+  const bundles = bundlesData || [];
 
   const totalLaunches = bundles.length;
   const remaining = user?.launches_remaining ?? 0;
