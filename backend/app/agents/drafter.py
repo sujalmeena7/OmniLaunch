@@ -45,11 +45,38 @@ HARD CHARACTER LIMITS — THESE ARE NON-NEGOTIABLE:
 - If a tagline limit of 60 characters exists, the title MUST be under 60 characters.
 - ALWAYS count your output characters. If over the limit, shorten it. Do NOT exceed limits.
 
+{platform_specific_rules}
+
 Return ONLY valid JSON (no markdown, no code fences):
 {{
   "title": "<post title>",
   "body": "<post body text>"
 }}"""
+
+# Platform-specific rule blocks injected into the system prompt
+PLATFORM_RULES_LINKEDIN = """LINKEDIN CRITICAL RULES:
+- First line must be a single punchy hook (max 12 words)
+- Every 1-2 sentences on its own line with blank line after
+- NO links in the body — write 'link in first comment' at end
+- 3-5 hashtags at very end only: #buildinpublic #indiehacker #saas #startup #founder
+- Total 150-250 words
+- Vulnerable human story, NOT product feature list"""
+
+PLATFORM_RULES_DEVTO = """DEV.TO CRITICAL RULES:
+- Use ## markdown headers between sections
+- Include at least one real code snippet in a code block
+- Lead with the engineering problem, not the product pitch
+- End with tech stack: Backend/Frontend/Database/AI
+- 4 tags: always include showdev and buildinpublic
+- Readers are developers — be technically honest"""
+
+PLATFORM_RULES_SIDEPROJECTS = """R/SIDEPROJECTS CRITICAL RULES:
+- Plain conversational paragraphs only — no bullets, no headers
+- Lead with personal frustration, not product description
+- Include honest numbers even if zero
+- End with a genuine question to the community
+- Under 200 words
+- NO links in body — mention 'link in comments'"""
 
 
 async def draft_post(
@@ -64,6 +91,17 @@ async def draft_post(
     """
     settings = get_settings()
     constraints = platform_constraints.get("constraints", {})
+
+    # Determine platform-specific rules to inject
+    platform_name = platform_constraints.get("platform", "")
+    sub_target_name = platform_constraints.get("sub_target", "") or ""
+    platform_specific_rules = ""
+    if platform_name == "linkedin":
+        platform_specific_rules = PLATFORM_RULES_LINKEDIN
+    elif platform_name == "devto":
+        platform_specific_rules = PLATFORM_RULES_DEVTO
+    elif platform_name == "reddit" and sub_target_name == "r/sideprojects":
+        platform_specific_rules = PLATFORM_RULES_SIDEPROJECTS
 
     prompt = DRAFTING_SYSTEM_PROMPT.format(
         tone_manifesto=json.dumps(tone_manifesto, indent=2),
@@ -85,6 +123,7 @@ async def draft_post(
         required_elements=", ".join(constraints.get("required_elements", [])),
         prefix=constraints.get("prefix") or "none",
         tone_guidance=constraints.get("tone_guidance", ""),
+        platform_specific_rules=platform_specific_rules,
     )
 
     if settings.gemini_api_key:

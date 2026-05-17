@@ -195,9 +195,7 @@ export default function SubscriptionPage() {
       </div>
 
       {/* Pricing Cards Container */}
-      <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(3, 1fr)", 
+      <div className="grid grid-cols-1 md:grid-cols-3" style={{ 
         gap: "24px", 
         width: "100%", 
         maxWidth: "960px", 

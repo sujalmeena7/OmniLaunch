@@ -467,7 +467,7 @@ export default function DashboardHome() {
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="show" style={{ maxWidth: "1100px" }}>
       {/* Stats Grid — responsive: 1 col mobile, 2 col tablet, 4 col desktop */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4" style={{ gap: "24px", marginBottom: "24px" }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: "16px", marginBottom: "16px" }}>
         <LaunchOverviewCard total={totalLaunches} remaining={remaining} />
         <VoiceProfileCard />
         <PlatformActivityCard bundles={bundles} />
@@ -475,11 +475,11 @@ export default function DashboardHome() {
       </div>
 
       {/* Secondary cards row — expanded to fill the grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4" style={{ gap: "24px", marginBottom: "32px" }}>
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: "16px", marginBottom: "24px" }}>
+        <div className="md:col-span-1">
           <FeatureHighlightCard />
         </div>
-        <div className="lg:col-span-2">
+        <div className="md:col-span-1">
           <PlatformBreakdownCard />
         </div>
       </div>

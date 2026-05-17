@@ -1,8 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ToastContainer } from "@/components/ui/ToastContainer";
 import { RootErrorBoundary } from "@/components/ui/ErrorBoundary";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "OmniLaunch — Launch Everywhere, Sound Like You",

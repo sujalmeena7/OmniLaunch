@@ -8,7 +8,7 @@ import { useState, useCallback } from "react";
 import type { VoiceProfile, PlatformRule } from "@/types";
 import { useValidation } from "@/hooks/useValidation";
 import { motion } from "framer-motion";
-import { Rocket, AlertTriangle, Link2, Loader2, ArrowUpRight } from "lucide-react";
+import { Rocket, AlertTriangle, Link2, Loader2, ArrowUpRight, Briefcase, Code2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export interface ProductFormData {
@@ -77,6 +77,36 @@ function toSentenceCase(str: string): string {
     .toLowerCase()
     .replace(/_/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/** Returns a Lucide icon element for a given platform */
+function PlatformIcon({ platform, subTarget }: { platform: string; subTarget?: string | null }) {
+  const size = 12;
+  const style: React.CSSProperties = { flexShrink: 0 };
+
+  if (platform === "linkedin") {
+    return <Briefcase size={size} style={style} />;
+  }
+  if (platform === "devto") {
+    return <Code2 size={size} style={style} />;
+  }
+  // Reddit platforms (including r/sideprojects) use a colored dot
+  if (platform === "reddit") {
+    return <span style={{ width: size, height: size, borderRadius: "50%", background: "#ff4500", display: "inline-block", flexShrink: 0 }} />;
+  }
+  if (platform === "hackernews") {
+    return <span style={{ width: size, height: size, borderRadius: "50%", background: "#ff6600", display: "inline-block", flexShrink: 0 }} />;
+  }
+  if (platform === "producthunt") {
+    return <span style={{ width: size, height: size, borderRadius: "50%", background: "#da552f", display: "inline-block", flexShrink: 0 }} />;
+  }
+  if (platform === "indiehackers") {
+    return <span style={{ width: size, height: size, borderRadius: "50%", background: "#0e6db4", display: "inline-block", flexShrink: 0 }} />;
+  }
+  if (platform === "twitter") {
+    return <span style={{ width: size, height: size, borderRadius: "50%", background: "#1da1f2", display: "inline-block", flexShrink: 0 }} />;
+  }
+  return null;
 }
 
 function CounterDisplay({
@@ -392,9 +422,11 @@ export default function ProductForm({
                     onClick={() =>
                       togglePlatform(rule.platform, rule.sub_target || undefined)
                     }
+                    className="flex items-center"
                     style={{
                       height: "32px",
                       padding: "0 14px",
+                      gap: "6px",
                       borderRadius: "9999px",
                       border: selected ? "none" : "1px solid var(--border-strong)",
                       background: selected
@@ -424,6 +456,7 @@ export default function ProductForm({
                       }
                     }}
                   >
+                    <PlatformIcon platform={rule.platform} subTarget={rule.sub_target} />
                     {toSentenceCase(rule.sub_target || rule.display_name || rule.platform)}
                   </button>
                 );

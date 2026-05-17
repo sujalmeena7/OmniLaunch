@@ -215,7 +215,7 @@ export default function Hero() {
       {/* Main hero content */}
       <div
         className="grid grid-cols-1 lg:grid-cols-2 items-center"
-        style={{ maxWidth: "1200px", margin: "0 auto", padding: "60px 24px 80px 48px", gap: "48px" }}
+        style={{ maxWidth: "1200px", margin: "0 auto", padding: "60px 24px 80px 24px", gap: "48px" }}
       >
         {/* Left column */}
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -336,7 +336,8 @@ export default function Hero() {
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] as const }}
-          style={{ display: "flex", justifyContent: "center", position: "relative" }}
+          className="hidden lg:flex"
+          style={{ justifyContent: "center", position: "relative" }}
         >
           {/* Radial glow behind mockup — primary royal blue */}
           <div

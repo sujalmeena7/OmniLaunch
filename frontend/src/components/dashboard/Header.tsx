@@ -67,9 +67,12 @@ export default function Header() {
   }, [profileOpen]);
 
   const handleLogout = () => {
-    logout();
     api.clearToken();
-    router.push("/login");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("omnilaunch_token");
+      localStorage.removeItem("omnilaunch_refresh");
+      window.location.href = "/";
+    }
   };
 
   const handleNav = (href: string) => {
@@ -92,7 +95,7 @@ export default function Header() {
         className="flex items-center justify-between flex-shrink-0 relative z-50"
         style={{
           height: "80px",
-          padding: "0 48px",
+          padding: "0 16px",
           borderBottom: "1px solid var(--border-subtle)",
           background: "var(--bg-header-glass)",
           backdropFilter: "blur(20px)",
